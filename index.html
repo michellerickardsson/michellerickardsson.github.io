@@ -1,14 +1,255 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title></title>
-  <link href="style.css" rel="stylesheet" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Growth portfolio</title>
+<meta name="description" content="Growth marketing portfolio." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-skriv någonting
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-  <script>
-  </script>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero__graphic">
+    <svg id="graph" width="100%" height="100%" viewBox="0 0 1400 900"
+         preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <marker id="gh-arrow" markerWidth="10" markerHeight="10" refX="4" refY="4" orient="auto">
+          <path d="M0,0 L8.5,4 L0,8 Z" fill="#4E4C46" />
+        </marker>
+        <filter id="gh-soft" x="-15%" y="-15%" width="130%" height="130%">
+          <feGaussianBlur stdDeviation="0.9" />
+        </filter>
+      </defs>
+
+      <g id="scene" transform="translate(640,420) scale(0.72)" filter="url(#gh-soft)">
+        <path id="pathA"
+              d="M -560,300 C -430,272 -336,196 -232,142 C -142,96 -80,58 -30,20"
+              fill="none" stroke="#4A4842" stroke-width="2.2"
+              stroke-linecap="round" opacity="0.75" />
+
+        <path id="word" d="M -30.0,20.0 C -14.8,-0.6 -2.8,-32.9 12.4,-53.5 C -4.2,-61.5 -17.1,-47.7 -10.5,-30.8 C -4.4,-15.8 12.6,-14.2 22.1,-25.0 C 28.3,-32.9 26.6,-46.9 21.6,-58.0 C 25.8,-38.4 30.1,-10.6 33.4,9.2 C 36.6,29.1 19.4,42.0 8.5,32.5 C 0.2,24.3 14.1,14.4 31.1,16.1 C 46.1,18.2 53.4,-8.6 55.5,-31.9 C 56.2,-44.5 57.0,-57.1 58.3,-67.8 C 60.8,-77.8 72.9,-79.0 75.2,-70.3 C 77.3,-62.6 67.2,-57.8 61.3,-60.4 C 70.7,-52.5 79.6,-42.5 87.9,-34.4 C 90.6,-47.5 95.3,-61.2 102.8,-71.5 C 105.5,-84.6 121.9,-93.2 132.2,-85.6 C 142.5,-78.0 144.3,-55.7 131.9,-48.2 C 119.4,-40.7 106.1,-51.7 108.3,-66.7 C 109.5,-77.4 121.5,-86.9 132.7,-83.6 C 141.5,-81.9 149.3,-75.7 157.2,-69.5 C 163.1,-62.8 166.6,-57.5 171.0,-56.6 C 173.7,-69.8 173.9,-84.3 174.7,-97.0 C 181.7,-86.4 189.7,-72.0 196.1,-63.4 C 198.8,-76.5 199.1,-91.1 199.8,-103.7 C 206.8,-93.1 214.8,-78.7 221.2,-70.1 C 226.4,-81.8 232.0,-91.6 238.2,-99.5 C 239.3,-118.4 240.6,-133.2 240.3,-145.6 C 247.4,-130.9 252.6,-111.6 256.3,-94.0 C 257.9,-84.1 264.7,-81.7 270.4,-87.4 C 275.9,-94.1 275.4,-111.5 270.3,-126.7 C 259.6,-128.0 247.7,-125.8 237.3,-122.0 C 248.9,-129.3 262.7,-131.9 277.2,-131.7 C 279.1,-147.7 280.3,-166.7 281.5,-177.4 C 290.6,-159.1 294.5,-129.1 298.8,-105.4 C 298.5,-121.9 303.1,-135.5 313.8,-134.2 C 322.6,-132.4 325.8,-112.6 327.5,-98.6 C 334.6,-110.8 346.4,-128.5 360.2,-146.7"
+              fill="none" stroke="#57554E" stroke-width="2.4" opacity="0.85"
+              stroke-linecap="round" stroke-linejoin="round" />
+
+        <path id="pathB"
+              d="M 360,-147 C 436,-196 486,-252 556,-300 C 626,-348 668,-396 736,-444"
+              fill="none" stroke="#4A4842" stroke-width="2.2"
+              stroke-linecap="round" opacity="0.75" marker-end="url(#gh-arrow)" />
+
+        <circle id="halo" r="20" fill="#C97A47" opacity="0" />
+        <circle id="ball" r="7" fill="#C97A47" opacity="0" />
+      </g>
+    </svg>
+  </div>
+
+  <nav class="hero__nav">
+    <div class="hero__logo">
+  <img src="starlogo.png" alt="Michelle Rickardsson" />
+</div>
+    <div class="hero__navlinks">
+      <a href="#case"><b>01</b> work</a>
+      <a href="#method"><b>02</b> method</a>
+      <a href="#about"><b>03</b> about</a>
+      <a href="#contact"><b>04</b> contact</a>
+    </div>
+  </nav>
+
+  <div class="hero__content">
+    <h1>Growth is rarely a <span class="hero__line">straight</span> line.<br />Real growth looks more like a <span class="hero__pop">scribble.</span></h1>
+    <p class="hero__sub">
+      Growth student at Berghs, with a background in ecommerce and photography.
+      I like the messy, creative and slightly unpredictable shape that growth
+      actually takes.
+    </p>
+    <div class="hero__tags">
+      <span><b>Shopify</b> &amp; Centra</span>
+      <span><b>0→1</b> store builds</span>
+      <span><b>Visual</b> &amp; commercial</span>
+    </div>
+  </div>
+</section>
+
+<main>
+
+<!-- ===== 01 SELECTED WORK ===== -->
+<section class="section" id="case">
+  <div class="section__head">
+    <span class="section__num">01</span>
+    <h2 class="section__title">Selected work</h2>
+  </div>
+
+  <ol class="cases">
+    <li class="case">
+      <div class="case__meta">
+        <span class="case__id">01</span>
+        <span class="case__tags">Ecommerce · Conversion · Merchandising</span>
+      </div>
+      <div class="case__body">
+        <h3 class="case__title">Building and running an online store</h3>
+        <p class="case__text">
+          Replace this with a real example from your ecommerce work. A store you
+          built, a page you rebuilt, a launch you ran. Lead with the problem, then
+          what you did and what it changed.
+        </p>
+        <dl class="case__metrics">
+          <div><dt>0→1</dt><dd>store built</dd></div>
+          <div><dt>Shopify</dt><dd>&amp; Centra</dd></div>
+          <div><dt>+X%</dt><dd>your result</dd></div>
+        </dl>
+      </div>
+    </li>
+
+    <li class="case">
+      <div class="case__meta">
+        <span class="case__id">02</span>
+        <span class="case__tags">Photography · Content · Campaign</span>
+      </div>
+      <div class="case__body">
+        <h3 class="case__title">Shooting the content that sells the product</h3>
+        <p class="case__text">
+          Photography is a growth asset when it is tied to a result. Show a shoot
+          where the imagery changed how a product performed, and what you tested
+          along the way.
+        </p>
+        <dl class="case__metrics">
+          <div><dt>2.4x</dt><dd>conversion</dd></div>
+          <div><dt>6 wks</dt><dd>test period</dd></div>
+        </dl>
+      </div>
+    </li>
+
+    <li class="case">
+      <div class="case__meta">
+        <span class="case__id">03</span>
+        <span class="case__tags">Retention · Lifecycle</span>
+      </div>
+      <div class="case__body">
+        <h3 class="case__title">Headline for your third case</h3>
+        <p class="case__text">
+          Three cases is plenty. Better three you can talk through in detail than
+          eight that are only headlines.
+        </p>
+        <dl class="case__metrics">
+          <div><dt>92%</dt><dd>returning</dd></div>
+          <div><dt>31%</dt><dd>lower churn</dd></div>
+        </dl>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ===== 02 METHOD ===== -->
+<section class="section" id="method">
+  <div class="section__head">
+    <span class="section__num">02</span>
+    <h2 class="section__title">How I work</h2>
+  </div>
+
+  <p class="section__lead">
+    Swap these steps for your own way of working. This is a sequence, so the
+    numbering earns its place here in a way it would not in the work list.
+  </p>
+
+  <ol class="steps">
+    <li class="step">
+      <span class="step__id">1</span>
+      <div>
+        <h3 class="step__title">Understand before measuring</h3>
+        <p class="step__text">
+          Who is the audience and what is stopping them? Numbers without context
+          mislead, so I start by listening and reading before setting metrics.
+        </p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step__id">2</span>
+      <div>
+        <h3 class="step__title">Write down a guess</h3>
+        <p class="step__text">
+          A hypothesis you can be wrong about. If I cannot say what would disprove
+          it, it is not a hypothesis, just an opinion.
+        </p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step__id">3</span>
+      <div>
+        <h3 class="step__title">Test small</h3>
+        <p class="step__text">
+          Fast and cheap first. A test that takes three weeks to set up can go
+          stale before it answers anything.
+        </p>
+      </div>
+    </li>
+    <li class="step">
+      <span class="step__id">4</span>
+      <div>
+        <h3 class="step__title">Keep, kill or scale</h3>
+        <p class="step__text">
+          The decision rule is set in advance, not after. Otherwise every result
+          becomes something you rationalise afterwards.
+        </p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ===== 03 ABOUT ===== -->
+<section class="section" id="about">
+  <div class="section__head">
+    <span class="section__num">03</span>
+    <h2 class="section__title">About</h2>
+  </div>
+
+  <div class="about">
+    <div class="about__text">
+      <p>
+        I work across ecommerce and photography, building and running online
+        stores in Shopify and Centra, and shooting the visual content that goes
+        into them. Two halves of the same problem: making people want something,
+        then making it easy to buy.
+      </p>
+      <p>
+        Growth is where those two meet, which is why I am studying it at Berghs.
+        Rewrite this paragraph in your own words. One line on why you are moving
+        toward growth, one on what you bring with you.
+      </p>
+    </div>
+
+    <dl class="about__facts">
+      <div><dt>Education</dt><dd>Berghs School of Communication</dd></div>
+      <div><dt>Background</dt><dd>Ecommerce, photography, own business</dd></div>
+      <div><dt>Based in</dt><dd>Stockholm</dd></div>
+      <div><dt>Looking for</dt><dd>A role in growth marketing</dd></div>
+    </dl>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== 04 CONTACT ===== -->
+<footer class="contact" id="contact">
+  <h2 class="contact__line">Get in touch if you are building<br />something that should grow.</h2>
+
+  <ul class="contact__links">
+    <li>
+      <span>Email</span>
+      <a href="mailto:your@mail.com">your@mail.com</a>
+    </li>
+    <li>
+      <span>LinkedIn</span>
+      <a href="https://linkedin.com/in/">linkedin.com</a>
+    </li>
+  </ul>
+
+  <p class="contact__foot">Stockholm · <span id="year"></span></p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>

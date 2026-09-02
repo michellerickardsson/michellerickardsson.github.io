@@ -1,0 +1,447 @@
+/* ============================================================
+   1. FÄRGER — här satt felet med den vita bakgrunden
+   ============================================================ */
+:root {
+  --pad-x: clamp(1.5rem, 6vw, 5rem);
+
+  --bg-color: #0f0f0d;
+  --ink: #f2f1ec;
+  --ink-soft: #b9b7ac;
+  --ink-mute: #7c7a72;
+  --rule: #2a2925;
+  --copper: #c97a47;
+  --amber: #e8a33d;
+
+  --font-heading: "Archivo", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ingen padding och ingen max-width på body — annars kan inte hero-grafiken
+   gå ut i kanterna. Bredden sätts i stället per sektion längre ner. */
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-color);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   2. HERO — lagerordning och höjd
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem var(--pad-x) 5rem;
+  overflow: hidden;
+}
+
+/* z-index 0, inte -1. Med -1 hamnade grafiken bakom sidans bakgrund. */
+.hero__graphic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* position: relative krävs för att z-index ska gälla.
+   Utan den lägger sig texten under grafiken. */
+.hero__nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+}
+.hero__logo img {
+  display: block;
+  height: 95px;
+  width: auto;
+}
+.hero__logo b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.hero__navlinks a {
+  margin-left: 1.6rem;
+  text-decoration: none;
+  color: var(--ink-mute);
+  transition: color 0.2s;
+}
+
+.hero__navlinks a:hover,
+.hero__navlinks a:hover b {
+  color: var(--copper);
+}
+
+/* margin-top: auto trycker ner texten till botten, så ordet "growth"
+   får plats ovanför rubriken i stället för att krocka med den. */
+.hero__content {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  max-width: 720px;
+}
+
+.hero__content h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
+}
+
+/* Paret i rubriken: "line" och "scribble" får samma behandling
+   men olika färg, så de läser som varandras motsats. */
+.hero__line {
+  color: var(--amber);
+  font-weight: 900;
+}
+
+.hero__pop {
+  color: var(--amber);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.hero__sub {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 44ch;
+  margin-bottom: 2.25rem;
+}
+
+.hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.75rem;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+}
+
+.hero__tags b {
+  color: var(--copper);
+  font-weight: 500;
+}
+
+/* ============================================================
+   3. SEKTIONER — bredden sätts här i stället för på body
+   ============================================================ */
+.section,
+.contact {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 6rem var(--pad-x);
+  border-top: 1px solid var(--rule);
+}
+
+.section__head {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 3rem;
+}
+
+.section__num {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--copper);
+}
+
+.section__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 700;
+}
+
+.section__lead {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 52ch;
+  margin: -1.5rem 0 3rem;
+}
+
+/* ============================================================
+   CASES
+   ============================================================ */
+.cases {
+  list-style: none;
+}
+
+.case {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.case:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+@media (min-width: 768px) {
+  .case {
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+  }
+}
+
+.case__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.case__id {
+  font-family: var(--font-heading);
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--rule);
+}
+
+.case__tags {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+}
+
+.case__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  max-width: 22ch;
+}
+
+.case__text {
+  color: var(--ink-soft);
+  line-height: 1.65;
+  max-width: 58ch;
+  margin-bottom: 2rem;
+}
+
+.case__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+}
+
+.case__metrics dt {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--copper);
+}
+
+.case__metrics dd {
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  margin-top: 0.25rem;
+}
+
+/* ============================================================
+   STEG
+   ============================================================ */
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 3rem;
+  }
+}
+
+.step {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.step__id {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--copper);
+  flex-shrink: 0;
+}
+
+.step__title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.step__text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+/* ============================================================
+   OM MIG
+   ============================================================ */
+.about {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .about {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 4rem;
+  }
+}
+
+.about__text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin-bottom: 1.25rem;
+  max-width: 56ch;
+}
+
+.about__text p:first-child {
+  color: var(--ink);
+  font-size: 1.2rem;
+}
+
+.about__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  border-left: 1px solid var(--rule);
+  padding-left: 1.5rem;
+}
+
+.about__facts dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  margin-bottom: 0.3rem;
+}
+
+.about__facts dd {
+  font-weight: 400;
+  font-size: 0.98rem;
+}
+
+/* ============================================================
+   KONTAKT
+   ============================================================ */
+.contact {
+  padding-top: 7rem;
+  padding-bottom: 3rem;
+}
+
+.contact__line {
+  font-family: var(--font-heading);
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  max-width: 18ch;
+}
+
+.contact__links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+  margin-top: 3.5rem;
+}
+
+.contact__links li {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.contact__links span {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+}
+
+.contact__links a {
+  font-size: 1.05rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--copper);
+  padding-bottom: 2px;
+  width: fit-content;
+  transition: color 0.2s;
+}
+
+.contact__links a:hover {
+  color: var(--copper);
+}
+
+.contact__foot {
+  margin-top: 5rem;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+/* ============================================================
+   MINDRE SKÄRMAR
+   ============================================================ */
+@media (max-width: 700px) {
+  .hero {
+    padding-bottom: 3rem;
+  }
+
+  .hero__nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .hero__navlinks a {
+    margin-left: 0;
+    margin-right: 1.25rem;
+  }
+
+  .section,
+  .contact {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .case__id {
+    font-size: 1.6rem;
+  }
+}
