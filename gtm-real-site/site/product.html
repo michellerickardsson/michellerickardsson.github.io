@@ -21,7 +21,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      any container loads, so every tag on the page can read page.* and user.* -->
 <script>window.FIKA_PAGE = { type: 'product', category: 'coffee' };</script>
 <script src="site.js"></script>
-
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  'ad_storage': 'granted',
+  'ad_user_data': 'granted',
+  'ad_personalization': 'granted',
+  'analytics_storage': 'granted'
+});
+</script>
 <!-- ======================================================================
      EXERCISE 1 — PASTE THE <head> PART OF YOUR GOOGLE TAG MANAGER
      SNIPPET ON THE EMPTY LINE BELOW THIS COMMENT.
