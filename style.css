@@ -287,6 +287,16 @@ body {
   gap: 2rem;
 }
 
+@media (min-width: 768px) {
+  /* pulls the photo up so it overlaps the gap above the About heading,
+     offset toward the right rather than flush with the column edge */
+  .about__side {
+    margin-top: -7rem;
+    margin-left: auto;
+    width: 80%;
+  }
+}
+
 .about__photo {
   display: block;
   width: 100%;

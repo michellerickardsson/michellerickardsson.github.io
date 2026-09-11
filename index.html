@@ -184,7 +184,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="about__side">
-      <canvas class="about__photo" id="aboutPhoto" data-src="me.jpg" role="img" aria-label="Michelle Rickardsson"></canvas>
+      <canvas class="about__photo" id="aboutPhoto" data-src="micheller.png" role="img" aria-label="Michelle Rickardsson"></canvas>
     </div>
   </div>
 </section>
@@ -331,7 +331,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       } else {
         sw = img.width; sh = sw / dstRatio; sx = 0; sy = (img.height - sh) / 2;
       }
-      ctx.filter = 'grayscale(1) sepia(0.25) contrast(1.05)';
       for (var c = 0; c < cols; c++) {
         for (var r = 0; r < rows; r++) {
           var idx = r * cols + c;
@@ -340,15 +339,49 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             var csx = sx + (c / cols) * sw, csy = sy + (r / rows) * sh;
             ctx.drawImage(img, csx, csy, sw / cols, sh / rows, dx, dy, cw + 1, ch + 1);
           } else {
-            ctx.fillStyle = '#94815f';
-            ctx.fillRect(dx, dy, cw + 1, ch + 1);
+            // leave transparent instead of filling with a color — works
+            // with a background-removed PNG without adding a visible box
+            ctx.clearRect(dx, dy, cw + 1, ch + 1);
           }
         }
       }
     }
 
+    // if the PNG has a near-white background baked in instead of real
+    // transparency, this strips it so no white box shows behind the photo
+    function stripWhiteBackground(sourceImg, callback) {
+      var off = document.createElement('canvas');
+      off.width = sourceImg.naturalWidth || sourceImg.width;
+      off.height = sourceImg.naturalHeight || sourceImg.height;
+      var octx = off.getContext('2d');
+      octx.drawImage(sourceImg, 0, 0);
+      try {
+        var imageData = octx.getImageData(0, 0, off.width, off.height);
+        var data = imageData.data;
+        var threshold = 240;
+        for (var i = 0; i < data.length; i += 4) {
+          if (data[i] > threshold && data[i + 1] > threshold && data[i + 2] > threshold) {
+            data[i + 3] = 0;
+          }
+        }
+        octx.putImageData(imageData, 0, 0);
+      } catch (e) {
+        // cross-origin image data can't be read — fall back to the
+        // original image untouched rather than breaking the page
+      }
+      var processed = new Image();
+      processed.onload = function () { callback(processed); };
+      processed.src = off.toDataURL();
+    }
+
     img.crossOrigin = 'anonymous';
-    img.onload = function () { ready = true; resize(); };
+    img.onload = function () {
+      stripWhiteBackground(img, function (cleanImg) {
+        img = cleanImg;
+        ready = true;
+        resize();
+      });
+    };
     img.src = src;
     canvas.__progress = reduceMotion ? 1 : 0;
     window.addEventListener('resize', resize);
