@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W8QPZMHL');</script>
+<!-- End Google Tag Manager -->
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Growth portfolio</title>
@@ -10,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.15/dist/lenis.min.js"></script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -54,11 +63,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <nav class="hero__nav">
     <div class="hero__logo">
-  <img src="starlogo.png" alt="Michelle Rickardsson" />
-</div>
+      <img src="starlogo.png" alt="Michelle Rickardsson" />
+    </div>
     <div class="hero__navlinks">
-      <a href="#case"><b>01</b> work</a>
-      <a href="#method"><b>02</b> method</a>
+      <a href="#currently"><b>01</b> currently</a>
+      <a href="#experience"><b>02</b> experience</a>
       <a href="#about"><b>03</b> about</a>
       <a href="#contact"><b>04</b> contact</a>
     </div>
@@ -68,170 +77,115 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h1>Growth is rarely a <span class="hero__line">straight</span> line.<br />Real growth looks more like a <span class="hero__pop">scribble.</span></h1>
     <p class="hero__sub">
       Growth student at Berghs, with a background in ecommerce and photography.
-      I like the messy, creative and slightly unpredictable shape that growth
-      actually takes.
+      I'm drawn to the messy, creative and slightly unpredictable shape that
+      growth actually takes.
     </p>
-    <div class="hero__tags">
-      <span><b>Shopify</b> &amp; Centra</span>
-      <span><b>0→1</b> store builds</span>
-      <span><b>Visual</b> &amp; commercial</span>
-    </div>
   </div>
 </section>
 
 <main>
 
-<!-- ===== 01 SELECTED WORK ===== -->
-<section class="section" id="case">
+<!-- ===== 01 CURRENTLY (light panel) ===== -->
+<div class="panel panel--light" id="currently">
+  <canvas class="dissolve" id="dissolveTop" height="90"></canvas>
+
+  <section class="section">
+    <div class="section__head">
+      <span class="section__num">01</span>
+      <h2 class="section__title">Currently
+        <svg class="section__underline" viewBox="0 0 300 12" preserveAspectRatio="none">
+          <path class="draw-underline" d="M2,7 C40,2 70,11 110,6 C150,1 180,10 220,5 C250,2 270,9 298,5" />
+        </svg>
+      </h2>
+    </div>
+
+    <p class="section__lead">
+      I'm currently studying growth marketing at Berghs School of Communication.
+      I started recently, so this isn't a portfolio of growth results yet. It's
+      what I bring into the field: five years running an online store and
+      producing the content that sold it.
+    </p>
+  </section>
+
+  <canvas class="dissolve dissolve--out" id="dissolveMid" height="90"></canvas>
+</div>
+
+<!-- ===== 02 EXPERIENCE ===== -->
+<section class="section" id="experience">
   <div class="section__head">
-    <span class="section__num">01</span>
-    <h2 class="section__title">Selected work</h2>
+    <span class="section__num">02</span>
+    <h2 class="section__title">Experience
+      <svg class="section__underline" viewBox="0 0 300 12" preserveAspectRatio="none">
+        <path class="draw-underline" d="M2,6 C35,11 65,1 100,7 C140,13 175,2 210,8 C245,13 270,3 298,7" />
+      </svg>
+    </h2>
   </div>
 
   <ol class="cases">
     <li class="case">
       <div class="case__meta">
         <span class="case__id">01</span>
-        <span class="case__tags">Ecommerce · Conversion · Merchandising</span>
+        <span class="case__tags">Photographer &amp; E-Commerce Manager · Stockholm &amp; New York · 2018–2024</span>
       </div>
       <div class="case__body">
-        <h3 class="case__title">Building and running an online store</h3>
+        <h3 class="case__title">WeSC</h3>
         <p class="case__text">
-          Replace this with a real example from your ecommerce work. A store you
-          built, a page you rebuilt, a launch you ran. Lead with the problem, then
-          what you did and what it changed.
+          Managed e-commerce operations worldwide, including backend
+          structuring, frontend design, order handling and customer service.
+          Produced all visual content including campaign materials, lookbooks
+          and product images. Project manager for all shoots in Sweden.
         </p>
-        <dl class="case__metrics">
-          <div><dt>0→1</dt><dd>store built</dd></div>
-          <div><dt>Shopify</dt><dd>&amp; Centra</dd></div>
-          <div><dt>+X%</dt><dd>your result</dd></div>
-        </dl>
       </div>
     </li>
 
     <li class="case">
       <div class="case__meta">
         <span class="case__id">02</span>
-        <span class="case__tags">Photography · Content · Campaign</span>
+        <span class="case__tags">Photographer, own business · Stockholm · 2017–present</span>
       </div>
       <div class="case__body">
-        <h3 class="case__title">Shooting the content that sells the product</h3>
+        <h3 class="case__title">Michelle Rickardsson Photography AB</h3>
         <p class="case__text">
-          Photography is a growth asset when it is tied to a result. Show a shoot
-          where the imagery changed how a product performed, and what you tested
-          along the way.
-        </p>
-        <dl class="case__metrics">
-          <div><dt>2.4x</dt><dd>conversion</dd></div>
-          <div><dt>6 wks</dt><dd>test period</dd></div>
-        </dl>
-      </div>
-    </li>
-
-    <li class="case">
-      <div class="case__meta">
-        <span class="case__id">03</span>
-        <span class="case__tags">Retention · Lifecycle</span>
-      </div>
-      <div class="case__body">
-        <h3 class="case__title">Headline for your third case</h3>
-        <p class="case__text">
-          Three cases is plenty. Better three you can talk through in detail than
-          eight that are only headlines.
-        </p>
-        <dl class="case__metrics">
-          <div><dt>92%</dt><dd>returning</dd></div>
-          <div><dt>31%</dt><dd>lower churn</dd></div>
-        </dl>
-      </div>
-    </li>
-  </ol>
-</section>
-
-<!-- ===== 02 METHOD ===== -->
-<section class="section" id="method">
-  <div class="section__head">
-    <span class="section__num">02</span>
-    <h2 class="section__title">How I work</h2>
-  </div>
-
-  <p class="section__lead">
-    Swap these steps for your own way of working. This is a sequence, so the
-    numbering earns its place here in a way it would not in the work list.
-  </p>
-
-  <ol class="steps">
-    <li class="step">
-      <span class="step__id">1</span>
-      <div>
-        <h3 class="step__title">Understand before measuring</h3>
-        <p class="step__text">
-          Who is the audience and what is stopping them? Numbers without context
-          mislead, so I start by listening and reading before setting metrics.
-        </p>
-      </div>
-    </li>
-    <li class="step">
-      <span class="step__id">2</span>
-      <div>
-        <h3 class="step__title">Write down a guess</h3>
-        <p class="step__text">
-          A hypothesis you can be wrong about. If I cannot say what would disprove
-          it, it is not a hypothesis, just an opinion.
-        </p>
-      </div>
-    </li>
-    <li class="step">
-      <span class="step__id">3</span>
-      <div>
-        <h3 class="step__title">Test small</h3>
-        <p class="step__text">
-          Fast and cheap first. A test that takes three weeks to set up can go
-          stale before it answers anything.
-        </p>
-      </div>
-    </li>
-    <li class="step">
-      <span class="step__id">4</span>
-      <div>
-        <h3 class="step__title">Keep, kill or scale</h3>
-        <p class="step__text">
-          The decision rule is set in advance, not after. Otherwise every result
-          becomes something you rationalise afterwards.
+          Run my own company since 2017, photographing and retouching with a
+          focus on fashion and portraits. Freelance clients include
+          J.Lindeberg, Warner Music, Stockholm Stad, Damernas Värld and
+          Nöjesguiden.
         </p>
       </div>
     </li>
   </ol>
+
+  <dl class="about__facts about__facts--inline">
+    <div><dt>Education</dt><dd>Berghs School of Communication</dd><dd>Gamleby fotoskola, Editorial &amp; commercial photography</dd></div>
+    <div><dt>Tools</dt><dd>Photoshop, Capture One, Shopify, Centra</dd></div>
+    <div><dt>Also used</dt><dd>Avid, Final Cut, Premiere Pro, DaVinci Resolve, After Effects</dd></div>
+    <div><dt>Learning now</dt><dd>GA4, Google Tag Manager, GitHub, VS Code</dd></div>
+  </dl>
 </section>
 
 <!-- ===== 03 ABOUT ===== -->
 <section class="section" id="about">
   <div class="section__head">
     <span class="section__num">03</span>
-    <h2 class="section__title">About</h2>
+    <h2 class="section__title">About
+      <svg class="section__underline" viewBox="0 0 300 12" preserveAspectRatio="none">
+        <path class="draw-underline" d="M2,8 C45,3 80,12 125,6 C165,1 195,11 235,5 C260,2 280,9 298,5" />
+      </svg>
+    </h2>
   </div>
 
   <div class="about">
     <div class="about__text">
       <p>
-        I work across ecommerce and photography, building and running online
-        stores in Shopify and Centra, and shooting the visual content that goes
-        into them. Two halves of the same problem: making people want something,
-        then making it easy to buy.
-      </p>
-      <p>
-        Growth is where those two meet, which is why I am studying it at Berghs.
-        Rewrite this paragraph in your own words. One line on why you are moving
-        toward growth, one on what you bring with you.
+        The visual, the creative side, has always been where I start. I'm now
+        building a growth mindset and toolbox on top of that, so my decisions
+        are backed by something measurable, not just instinct.
       </p>
     </div>
 
-    <dl class="about__facts">
-      <div><dt>Education</dt><dd>Berghs School of Communication</dd></div>
-      <div><dt>Background</dt><dd>Ecommerce, photography, own business</dd></div>
-      <div><dt>Based in</dt><dd>Stockholm</dd></div>
-      <div><dt>Looking for</dt><dd>A role in growth marketing</dd></div>
-    </dl>
+    <div class="about__side">
+      <canvas class="about__photo" id="aboutPhoto" data-src="me.jpg" role="img" aria-label="Michelle Rickardsson"></canvas>
+    </div>
   </div>
 </section>
 
@@ -239,22 +193,208 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ===== 04 CONTACT ===== -->
 <footer class="contact" id="contact">
-  <h2 class="contact__line">Get in touch if you are building<br />something that should grow.</h2>
+  <h2 class="contact__line">Let's grow something.</h2>
 
   <ul class="contact__links">
     <li>
       <span>Email</span>
-      <a href="mailto:your@mail.com">your@mail.com</a>
+      <a href="mailto:contact@michellerickardsson.com">contact@michellerickardsson.com</a>
     </li>
     <li>
       <span>LinkedIn</span>
-      <a href="https://linkedin.com/in/">linkedin.com</a>
+      <a href="https://www.linkedin.com/in/michelle-rickardsson-069485132">in/michelle-rickardsson</a>
     </li>
   </ul>
 
-  <p class="contact__foot">Stockholm · <span id="year"></span></p>
+  <p class="contact__foot">Michelle Rickardsson · <span id="year"></span></p>
 </footer>
 
 <script src="script.js"></script>
+
+<script>
+(function () {
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- smooth scroll ----
+  if (!reduceMotion && window.Lenis) {
+    var lenis = new Lenis({ duration: 1.1, easing: function (t) { return 1 - Math.pow(1 - t, 3); } });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  }
+
+  // ---- dissolve transition: a grid of vertical bars that flips cell by
+  // cell between dark and light as you scroll, redrawn every frame while
+  // in view, a continuous reaction to scroll, not a one-off trigger ----
+  var darkColor = '#18130f';
+  var lightColor = '#a89474';
+
+  function setupDissolve(canvas, direction) {
+    if (!canvas) return;
+    var cols = 60;
+    var rows = 8;
+    var cellThreshold = [];
+    for (var c = 0; c < cols; c++) {
+      cellThreshold[c] = [];
+      for (var r = 0; r < rows; r++) {
+        cellThreshold[c][r] = Math.random();
+      }
+    }
+
+    function resize() {
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * devicePixelRatio));
+      canvas.height = Math.max(1, Math.round(rect.height * devicePixelRatio));
+      draw(canvas.__progress || 0);
+    }
+
+    function draw(progress) {
+      var ctx = canvas.getContext('2d');
+      var w = canvas.width, h = canvas.height;
+      var cw = w / cols, ch = h / rows;
+      // direction "in": dark -> light as progress 0->1. "out": light -> dark.
+      for (var c = 0; c < cols; c++) {
+        for (var r = 0; r < rows; r++) {
+          var t = cellThreshold[c][r];
+          var lit = direction === 'in' ? (t < progress) : (t > progress);
+          ctx.fillStyle = lit ? lightColor : darkColor;
+          ctx.fillRect(Math.floor(c * cw), Math.floor(r * ch), Math.ceil(cw) + 1, Math.ceil(ch) + 1);
+        }
+      }
+    }
+
+    canvas.__progress = direction === 'in' ? 0 : 1;
+    canvas.__draw = draw;
+    resize();
+    window.addEventListener('resize', resize);
+    return { canvas: canvas, draw: draw };
+  }
+
+  var dTop = setupDissolve(document.getElementById('dissolveTop'), 'in');
+  var dBottom = setupDissolve(document.getElementById('dissolveMid'), 'out');
+
+  function updateDissolve() {
+    [dTop, dBottom].forEach(function (d) {
+      if (!d) return;
+      var rect = d.canvas.getBoundingClientRect();
+      var vh = window.innerHeight;
+      // progress 0 -> 1 as the canvas travels from just below the viewport's
+      // lower third up to just above its upper third
+      var raw = (vh * 0.85 - rect.top) / (rect.height + vh * 0.35);
+      var progress = Math.max(0, Math.min(1, raw));
+      d.canvas.__progress = progress;
+      d.draw(progress);
+    });
+  }
+
+  if (reduceMotion) {
+    if (dTop) dTop.draw(1);
+    if (dBottom) dBottom.draw(0);
+  } else {
+    var dissolveTicking = false;
+    window.addEventListener('scroll', function () {
+      if (dissolveTicking) return;
+      dissolveTicking = true;
+      requestAnimationFrame(function () { updateDissolve(); dissolveTicking = false; });
+    }, { passive: true });
+    updateDissolve();
+  }
+
+  // ---- photo dissolve: the About photo resolves from a blocky, muted
+  // grid into the sharp image, cell by cell, as it scrolls into view ----
+  (function () {
+    var canvas = document.getElementById('aboutPhoto');
+    if (!canvas) return;
+    var src = canvas.getAttribute('data-src');
+    var img = new Image();
+    var ready = false;
+    var cols = 14, rows = 18;
+    var cellOrder = [];
+    for (var i = 0; i < cols * rows; i++) cellOrder.push(Math.random());
+
+    function resize() {
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * devicePixelRatio));
+      canvas.height = Math.max(1, Math.round(rect.height * devicePixelRatio));
+      draw(canvas.__progress || 0);
+    }
+
+    function draw(progress) {
+      if (!ready) return;
+      var ctx = canvas.getContext('2d');
+      var w = canvas.width, h = canvas.height;
+      var cw = w / cols, ch = h / rows;
+      // cover-fit the source image into the canvas box
+      var srcRatio = img.width / img.height, dstRatio = w / h;
+      var sx, sy, sw, sh;
+      if (srcRatio > dstRatio) {
+        sh = img.height; sw = sh * dstRatio; sx = (img.width - sw) / 2; sy = 0;
+      } else {
+        sw = img.width; sh = sw / dstRatio; sx = 0; sy = (img.height - sh) / 2;
+      }
+      ctx.filter = 'grayscale(1) sepia(0.25) contrast(1.05)';
+      for (var c = 0; c < cols; c++) {
+        for (var r = 0; r < rows; r++) {
+          var idx = r * cols + c;
+          var dx = c * cw, dy = r * ch;
+          if (cellOrder[idx] < progress) {
+            var csx = sx + (c / cols) * sw, csy = sy + (r / rows) * sh;
+            ctx.drawImage(img, csx, csy, sw / cols, sh / rows, dx, dy, cw + 1, ch + 1);
+          } else {
+            ctx.fillStyle = '#94815f';
+            ctx.fillRect(dx, dy, cw + 1, ch + 1);
+          }
+        }
+      }
+    }
+
+    img.crossOrigin = 'anonymous';
+    img.onload = function () { ready = true; resize(); };
+    img.src = src;
+    canvas.__progress = reduceMotion ? 1 : 0;
+    window.addEventListener('resize', resize);
+
+    if (reduceMotion) {
+      // draw once ready() fires via resize()
+    } else {
+      var photoTicking = false;
+      function updatePhoto() {
+        var rect = canvas.getBoundingClientRect();
+        var vh = window.innerHeight;
+        var raw = (vh * 0.85 - rect.top) / (rect.height + vh * 0.3);
+        var progress = Math.max(0, Math.min(1, raw));
+        canvas.__progress = progress;
+        draw(progress);
+      }
+      window.addEventListener('scroll', function () {
+        if (photoTicking) return;
+        photoTicking = true;
+        requestAnimationFrame(function () { updatePhoto(); photoTicking = false; });
+      }, { passive: true });
+      img.addEventListener('load', updatePhoto);
+    }
+  })();
+
+  // ---- drawn underlines under section titles, on scroll ----
+  var underlines = Array.prototype.slice.call(document.querySelectorAll('.draw-underline'));
+  underlines.forEach(function (path) {
+    var len = path.getTotalLength();
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = reduceMotion ? 0 : len;
+  });
+  if (!reduceMotion && underlines.length) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var p = entry.target;
+          p.style.transition = 'stroke-dashoffset 0.9s cubic-bezier(0.65, 0, 0.35, 1)';
+          p.style.strokeDashoffset = '0';
+          observer.unobserve(p);
+        }
+      });
+    }, { threshold: 0.6 });
+    underlines.forEach(function (p) { observer.observe(p); });
+  }
+})();
+</script>
 </body>
 </html>
