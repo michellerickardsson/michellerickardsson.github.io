@@ -300,7 +300,7 @@ body {
 .about__photo {
   display: block;
   width: 100%;
-  max-width: 220px;
+  max-width: 300px;
   aspect-ratio: 3 / 4;
   border: 1px solid var(--rule);
 }
@@ -358,6 +358,22 @@ body {
   max-width: 24ch;
 }
 
+/* the hand-drawn flower doodle, sitting inline right after the contact
+   heading text — small, not a block of its own */
+.grow-flower {
+  display: inline-block;
+  width: 44px;
+  vertical-align: middle;
+  margin-left: 0.6rem;
+}
+
+.grow-flower canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 774 / 560;
+}
+
 .contact__links {
   list-style: none;
   display: flex;
@@ -385,6 +401,22 @@ body {
   padding-bottom: 2px;
   width: fit-content;
   transition: color 0.2s;
+}
+
+/* a filled button instead of an underlined text link, for LinkedIn */
+.contact__links a.button {
+  display: inline-block;
+  background: #0a66c2;
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  padding: 0.65rem 1.3rem;
+  transition: background 0.2s;
+}
+
+.contact__links a.button:hover {
+  background: #004182;
+  color: #ffffff;
 }
 
 .contact__links a:hover {

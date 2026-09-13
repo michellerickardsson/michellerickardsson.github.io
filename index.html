@@ -184,7 +184,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="about__side">
-      <canvas class="about__photo" id="aboutPhoto" data-src="micheller.png" role="img" aria-label="Michelle Rickardsson"></canvas>
+      <canvas class="about__photo" id="aboutPhoto" data-src="me.jpg" role="img" aria-label="Michelle Rickardsson"></canvas>
     </div>
   </div>
 </section>
@@ -193,7 +193,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ===== 04 CONTACT ===== -->
 <footer class="contact" id="contact">
-  <h2 class="contact__line">Let's grow something.</h2>
+  <h2 class="contact__line">Let's grow something.
+    <span class="grow-flower" aria-hidden="true">
+      <canvas id="growFlowerCanvas" data-src="blomma.png"></canvas>
+    </span>
+  </h2>
 
   <ul class="contact__links">
     <li>
@@ -202,7 +206,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </li>
     <li>
       <span>LinkedIn</span>
-      <a href="https://www.linkedin.com/in/michelle-rickardsson-069485132">in/michelle-rickardsson</a>
+      <a class="button" href="https://www.linkedin.com/in/michelle-rickardsson-069485132">Michelle Rickardsson</a>
     </li>
   </ul>
 
@@ -358,10 +362,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       try {
         var imageData = octx.getImageData(0, 0, off.width, off.height);
         var data = imageData.data;
-        var threshold = 240;
+        // soft falloff instead of a hard cutoff — catches light halo/edge
+        // pixels around the cutout without clipping mid-tones abruptly
+        var lowT = 195, highT = 250;
         for (var i = 0; i < data.length; i += 4) {
-          if (data[i] > threshold && data[i + 1] > threshold && data[i + 2] > threshold) {
-            data[i + 3] = 0;
+          var brightness = Math.min(data[i], data[i + 1], data[i + 2]);
+          if (brightness > lowT) {
+            var fade = 1 - Math.min(1, Math.max(0, (brightness - lowT) / (highT - lowT)));
+            data[i + 3] = Math.round(data[i + 3] * fade);
           }
         }
         octx.putImageData(imageData, 0, 0);
@@ -405,6 +413,84 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }, { passive: true });
       img.addEventListener('load', updatePhoto);
     }
+  })();
+
+  // ---- growth flower doodle next to the contact heading: your own PNG,
+  // tinted to the site's copper, revealed with a bottom-to-top wipe tied
+  // directly to scroll position ----
+  (function () {
+    var wrap = document.querySelector('.grow-flower');
+    var canvas = document.getElementById('growFlowerCanvas');
+    if (!wrap || !canvas) return;
+
+    var img = new Image();
+    var tinted = null;
+    var ready = false;
+
+    function tint(sourceImg, color, done) {
+      var off = document.createElement('canvas');
+      off.width = sourceImg.naturalWidth;
+      off.height = sourceImg.naturalHeight;
+      var octx = off.getContext('2d');
+      octx.drawImage(sourceImg, 0, 0);
+      octx.globalCompositeOperation = 'source-in';
+      octx.fillStyle = color;
+      octx.fillRect(0, 0, off.width, off.height);
+      done(off);
+    }
+
+    function resize() {
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * devicePixelRatio));
+      canvas.height = Math.max(1, Math.round(rect.height * devicePixelRatio));
+      draw(canvas.__progress || 0);
+    }
+
+    function draw(t) {
+      if (!ready) return;
+      var ctx = canvas.getContext('2d');
+      var w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      var revealH = h * t;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, h - revealH, w, revealH);
+      ctx.clip();
+      ctx.drawImage(tinted, 0, 0, w, h);
+      ctx.restore();
+    }
+
+    img.crossOrigin = 'anonymous';
+    img.onload = function () {
+      var copper = getComputedStyle(document.documentElement).getPropertyValue('--copper').trim() || '#c97a47';
+      tint(img, copper, function (tintedCanvas) {
+        tinted = tintedCanvas;
+        ready = true;
+        resize();
+      });
+    };
+    img.src = canvas.getAttribute('data-src');
+    window.addEventListener('resize', resize);
+
+    if (reduceMotion) {
+      canvas.__progress = 1;
+      return;
+    }
+
+    var ticking = false;
+    function update() {
+      var rect = wrap.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var raw = (vh * 0.9 - rect.top) / (rect.height + vh * 0.3);
+      canvas.__progress = Math.max(0, Math.min(1, raw));
+      draw(canvas.__progress);
+    }
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { update(); ticking = false; });
+    }, { passive: true });
+    update();
   })();
 
   // ---- drawn underlines under section titles, on scroll ----
