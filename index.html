@@ -101,7 +101,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <p class="section__lead">
       I'm currently studying growth marketing at Berghs School of Communication.
-      I started recently, and I'm graduating in May 2027.
+      I started recently, so this isn't a portfolio of growth results yet. It's
+      what I bring into the field: five years running an online store and
+      producing the content that sold it.
     </p>
   </section>
 
@@ -381,23 +383,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     img.crossOrigin = 'anonymous';
-img.onload = function () {
-  // match the canvas box to the image's real proportions instead of
-  // guessing an aspect ratio — this is what was cutting the flower off
-  var ratio = img.naturalHeight / img.naturalWidth;
-  canvas.style.height = (canvas.clientWidth * ratio) + 'px';
-  var copper = getComputedStyle(document.documentElement).getPropertyValue('--copper').trim() || '#c97a47';
-  tint(img, copper, function (tintedCanvas) {
-    tinted = tintedCanvas;
-    ready = true;
-    resize();
-  });
-};
-img.src = canvas.getAttribute('data-src');
-window.addEventListener('resize', function () {
-  if (img.naturalWidth) canvas.style.height = (canvas.clientWidth * img.naturalHeight / img.naturalWidth) + 'px';
-  resize();
-});
+    img.onload = function () {
+      stripWhiteBackground(img, function (cleanImg) {
+        img = cleanImg;
+        ready = true;
+        resize();
+      });
     };
     img.src = src;
     canvas.__progress = reduceMotion ? 1 : 0;
@@ -471,6 +462,10 @@ window.addEventListener('resize', function () {
 
     img.crossOrigin = 'anonymous';
     img.onload = function () {
+      // match the canvas box to the image's real proportions instead of
+      // guessing an aspect ratio — this is what was cutting the flower off
+      var ratio = img.naturalHeight / img.naturalWidth;
+      canvas.style.height = (canvas.clientWidth * ratio) + 'px';
       var copper = getComputedStyle(document.documentElement).getPropertyValue('--copper').trim() || '#c97a47';
       tint(img, copper, function (tintedCanvas) {
         tinted = tintedCanvas;
@@ -479,7 +474,10 @@ window.addEventListener('resize', function () {
       });
     };
     img.src = canvas.getAttribute('data-src');
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', function () {
+      if (img.naturalWidth) canvas.style.height = (canvas.clientWidth * img.naturalHeight / img.naturalWidth) + 'px';
+      resize();
+    });
 
     if (reduceMotion) {
       canvas.__progress = 1;
