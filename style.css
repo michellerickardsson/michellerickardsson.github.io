@@ -362,16 +362,16 @@ body {
    heading text — small, not a block of its own */
 .grow-flower {
   display: inline-block;
-  width: 44px;
+  width: 64px;
   vertical-align: middle;
   margin-left: 0.6rem;
 }
 
+/* height is set from JS once the image loads, matching its real
+   proportions — no guessed aspect-ratio here */
 .grow-flower canvas {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 774 / 560;
 }
 
 .contact__links {
