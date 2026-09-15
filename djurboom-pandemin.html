@@ -1,0 +1,557 @@
+<!-- ===========================================================
+     Klistra in detta i din index.html, gärna direkt i <body>.
+     Chart.js laddas via CDN i slutet av filen.
+     =========================================================== -->
+<style>
+  .djurboom {
+    --bg: #18130f;
+    --ink: #f2f1ec;
+    --ink-soft: #b9b7ac;
+    --ink-mute: #7c7a72;
+    --rule: #2f2a22;
+    --copper: #c97a47;
+    --amber: #e8a33d;
+    --sand: #a89474;
+    --font-heading: "Archivo", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 6rem clamp(1.5rem, 6vw, 5.5rem) 7rem;
+    line-height: 1.55;
+  }
+  .djurboom .kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--copper);
+    text-transform: uppercase;
+    margin: 0 0 1.1rem;
+  }
+  .djurboom h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.5rem;
+    max-width: 17ch;
+  }
+  .djurboom .question {
+    border-left: 2px solid var(--amber);
+    padding: 0.15rem 0 0.15rem 2rem;
+    margin: 0 0 5rem;
+  }
+  .djurboom .question__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--copper);
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+  }
+  .djurboom .question__text {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 1.45;
+    color: var(--ink);
+    margin: 0;
+    max-width: 46ch;
+  }
+  .djurboom .section__head {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    margin-bottom: 0.3rem;
+  }
+  .djurboom .section__num {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--copper);
+  }
+  .djurboom h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    font-weight: 700;
+    margin: 0;
+  }
+  .djurboom .underline {
+    display: block;
+    width: 72px;
+    height: 3px;
+    background: var(--amber);
+    border-radius: 2px;
+    margin: 8px 0 1.4rem;
+  }
+  .djurboom .stat {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin: 0 0 0.75rem;
+    max-width: 42ch;
+  }
+  .djurboom p {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin: 0 0 1.25rem;
+  }
+  .djurboom section {
+    margin: 0 0 5rem;
+  }
+  .djurboom hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rule) 20%, var(--rule) 80%, transparent);
+    margin: 0 0 3.5rem;
+  }
+  .djurboom .chart-box {
+    position: relative;
+    height: 320px;
+    margin: 0.5rem 0 0.75rem;
+  }
+  .djurboom .source {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+  }
+  .djurboom .summary {
+    border-left: 1px solid var(--copper);
+    padding-left: 1.25rem;
+  }
+  .djurboom .sources-list dt {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-top: 1rem;
+  }
+  .djurboom .sources-list dd {
+    font-size: 13.5px;
+    color: var(--ink-mute);
+    margin: 2px 0 0;
+  }
+  .djurboom .chart-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.75rem 0 0.25rem;
+  }
+  .djurboom .toggle-btn {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .djurboom .toggle-btn:hover {
+    border-color: var(--copper);
+    color: var(--ink);
+  }
+  .djurboom .toggle-btn.active {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--bg);
+    font-weight: 600;
+  }
+</style>
+
+<div class="djurboom">
+
+  <p class="kicker">En datastory</p>
+  <h1>Djurboomen under pandemin, och bakslaget som kom efteråt</h1>
+
+  <div class="question">
+    <p class="question__label">Frågeställning</p>
+    <p class="question__text">Skaffade fler hund för att de fick jobba hemifrån, och lämnade de bort hundarna igen när kontoret kallade tillbaka? Samma mönster testat även på katt och häst.</p>
+  </div>
+
+  <section>
+    <div class="section__head"><span class="section__num">01</span><h2>Hemarbete och hundköp i takt</h2></div>
+    <div class="underline"></div>
+    <p class="stat">Två skalor, samma årsaxel: andel hemarbete till vänster, antal nya hundar till höger.</p>
+    <div class="chart-box"><canvas id="chartWorkDog"></canvas></div>
+    <p>Hemarbete och hundköp delar samma årsaxel men har varsin egen skala, en för procent, en för antal hundar, så ingen av kurvorna trycks platt. SCB:s siffra för hemarbete finns bara för tre punkter, 2019, pandemitoppen och 2024, medan hundsiffran finns för varje år, men mönstret syns ändå: båda vänder uppåt kring samma period och båda är på väg ner mot slutet, hemarbetet något snabbare än hundköpen.</p>
+    <p class="source">Källa: SCB, Arbetskraftsundersökningarna (AKU), rapporten Arbete hemifrån och arbetad tid 2019 till 2024, samt Jordbruksverkets hundregister.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="section__head"><span class="section__num">02</span><h2>Hund</h2></div>
+    <div class="underline"></div>
+    <p class="stat">78 052 nyregistrerade hundar 2021, det högsta antalet Jordbruksverket någonsin uppmätt.</p>
+
+    <div class="chart-toggle">
+      <button class="toggle-btn active" data-show="dogCountLine">Antal</button>
+      <button class="toggle-btn" data-show="dogCountBar">Förändring per år</button>
+    </div>
+    <div class="chart-box" id="dogCountLine"><canvas id="chartDogCount"></canvas></div>
+    <div class="chart-box" id="dogCountBar" style="display:none"><canvas id="chartDogChange"></canvas></div>
+
+    <p>Antalet nyregistrerade hundar steg varje år från 2018 till pandemitoppen 2021, och har sedan sjunkit varje år igen. Jordbruksverket kallar själva 2025 för ett trendbrott, det lägsta antalet på åtta år. Förändringsvyn visar samma sak fast som årlig procentuell rörelse.</p>
+    <p class="source">Källa: Jordbruksverkets hundregister, årliga pressmeddelanden 2019 till 2026.</p>
+
+    <p class="stat">Ägarbyten, den närmaste offentliga siffran för omplacerade hundar, toppade inte förrän 2023, två år efter köptoppen.</p>
+    <div class="chart-box"><canvas id="chartOwnerChange"></canvas></div>
+    <p>Ett ägarbyte betyder bara att en hund fått en ny ägare i registret, inte att den övergavs, men det är den närmaste offentliga siffran som finns. 2020 saknas helt, och 2022 är en uppskattning utifrån ett månadssnitt Jordbruksverket själva angav, inte en bekräftad årssumma.</p>
+    <p class="source">Källa: Jordbruksverkets hundregister, tabell över ägarbyten per månad, samt en kandidatuppsats om omplacering av hund, DiVA portal 2022.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="section__head"><span class="section__num">03</span><h2>Skaffade jämfört med lämnade bort</h2></div>
+    <div class="underline"></div>
+    <p class="stat">Två kurvor, samma startpunkt 2019, men de rör sig i otakt.</p>
+    <div class="chart-box"><canvas id="chartIndexCompare"></canvas></div>
+    <p>Båda kurvorna är indexerade mot 2019, satt till 100. Antalet hundar som skaffades vände nedåt redan efter 2021, medan antalet som bytte ägare fortsatte uppåt ända till 2023 och låg fortfarande något över 2019 års nivå så sent som 2025. Fördröjningen är själva poängen, hundarna som köptes i pandemins första våg hann bli vuxna innan de började lämnas bort.</p>
+    <p class="source">Källa: samma som ovan. 2020 saknas för ägarbyten, 2022 är en uppskattning.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="section__head"><span class="section__num">04</span><h2>Katt</h2></div>
+    <div class="underline"></div>
+    <p class="stat">Sökningar på kattungar dubblades under pandemins första månader, men ingen myndighet mätte det på riktigt.</p>
+    <div class="chart-box"><canvas id="chartCat"></canvas></div>
+    <p>Blockets sökstatistik är det närmaste vi kommer köpintresse för katt under pandemins första våg. Kattungar ökade mest av alla djurslag, men Sverige hade ingen obligatorisk kattregistrering förrän 2023, så det finns ingen bekräftad köpsiffra att jämföra med.</p>
+    <p class="source">Källa: Blockets sökstatistik, april till maj 2019 jämfört med samma period 2020, återgiven av Hem och Hyra.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="section__head"><span class="section__num">05</span><h2>Häst</h2></div>
+    <div class="underline"></div>
+    <p class="stat">Normal årlig prisökning låg på 4 till 10 procent. 2021 blev den 15 till 18 procent.</p>
+    <div class="chart-box"><canvas id="chartHorse"></canvas></div>
+    <p>Prisökningen är ett tydligt avvikande värde, långt över det normala intervallet (skuggat i grafen), med islandshäst som mest efterfrågad. Det syns även i faktiska köp, inte bara priser: 2020 importerades drygt 300 hästar från Island till Sverige, den högsta siffran på nästan tio år.</p>
+    <p class="source">Källa: Agria Djurförsäkring, prisstatistik för försäkrade hästar 5 till 15 år, inköpspris under 1 miljon kronor, samt Tidningen Ridsport, artikel om importstatistik från Island, 2022.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="section__head"><span class="section__num">06</span><h2>Sammanfattning</h2></div>
+    <div class="underline"></div>
+    <div class="summary">
+      <p>Mönstret upprepar sig oavsett djurslag och måttstock: köpsiffror för hund, sökintresse för katt, priser och import för häst. Alla pekar mot samma period, och alla vänder efter 2021 eller 2022, ungefär i takt med att hemarbetet också minskade. Det stärker bilden av att hemarbete och friare arbetsplats faktiskt drev fler att skaffa djur, även om ingen enskild källa kan bevisa orsakssambandet helt och hållet.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="section__head"><span class="section__num">07</span><h2>Källor</h2></div>
+    <div class="underline"></div>
+    <dl class="sources-list">
+      <dt>SCB, Arbetskraftsundersökningarna</dt>
+      <dd>Rapporten Arbete hemifrån och arbetad tid, 2019 till 2024, samt pressmeddelanden om hemarbete under pandemin</dd>
+      <dt>Jordbruksverkets hundregister</dt>
+      <dd>Årliga pressmeddelanden om nyregistreringar, samt tabell över ägarbyten per månad, 2019 till 2026, jordbruksverket.se</dd>
+      <dt>Examensarbete, Omplacering av hund</dt>
+      <dd>Kandidatuppsats med Jordbruksverkets ägarbytesstatistik för 2021, DiVA portal</dd>
+      <dt>Hem och Hyra</dt>
+      <dd>Artikel om Blockets sökstatistik för husdjur, 2020</dd>
+      <dt>Agria Djurförsäkring</dt>
+      <dd>Prisstatistik för häst, artikel mars 2022</dd>
+      <dt>Tidningen Ridsport</dt>
+      <dd>Artikel om prisutveckling och importstatistik för islandshäst, 2022</dd>
+    </dl>
+  </section>
+
+</div>
+
+<!-- Chart.js via cdnjs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+(function () {
+  var COLORS = {
+    bg: '#18130f', ink: '#f2f1ec', inkSoft: '#b9b7ac', inkMute: '#7c7a72',
+    rule: '#2f2a22', copper: '#c97a47', amber: '#e8a33d', sand: '#a89474'
+  };
+
+  Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+  Chart.defaults.color = COLORS.inkMute;
+  Chart.defaults.borderColor = COLORS.rule;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.tooltip.backgroundColor = COLORS.bg;
+  Chart.defaults.plugins.tooltip.borderColor = COLORS.copper;
+  Chart.defaults.plugins.tooltip.borderWidth = 1;
+  Chart.defaults.plugins.tooltip.padding = 10;
+  Chart.defaults.plugins.tooltip.titleColor = COLORS.ink;
+  Chart.defaults.plugins.tooltip.bodyColor = COLORS.inkSoft;
+
+  var years8 = ['2018','2019','2020','2021','2022','2023','2024','2025'];
+  var years7 = ['2019','2020','2021','2022','2023','2024','2025'];
+  var dogCounts = [58053,62561,71507,78052,72876,67700,62154,56801];
+  var dogChange = [7.8,14.3,9.2,-6.6,-7.1,-8.2,-8.6]; // 2019..2025
+  var ownerChanges = [16456,null,17920,18000,19191,18515,16486]; // 2019..2025, 2022 estimated
+  var dogIndex = [100,114.3,124.8,116.5,108.2,99.3,90.8]; // 2019..2025
+  var ownerIndex = [100,null,108.9,109.4,116.6,112.5,100.2]; // 2019..2025
+
+  // 01: Hemarbete + hund, dual axis
+  new Chart(document.getElementById('chartWorkDog'), {
+    type: 'line',
+    data: {
+      labels: years8,
+      datasets: [
+        {
+          label: 'Hemarbete (%), vänster axel',
+          data: [null,6,null,24,null,null,13,null],
+          spanGaps: true,
+          borderColor: COLORS.copper,
+          backgroundColor: COLORS.copper,
+          borderDash: [2,5],
+          yAxisID: 'yWork',
+          tension: 0
+        },
+        {
+          label: 'Nya hundar, höger axel',
+          data: dogCounts,
+          borderColor: COLORS.amber,
+          backgroundColor: COLORS.amber,
+          yAxisID: 'yDogs',
+          tension: 0.15
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        yWork: { position: 'left', ticks: { color: COLORS.copper, callback: v => v + '%' }, grid: { color: COLORS.rule } },
+        yDogs: { position: 'right', ticks: { color: COLORS.amber }, grid: { display: false } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // 02a: Hund antal, linje
+  new Chart(document.getElementById('chartDogCount'), {
+    type: 'line',
+    data: {
+      labels: years8,
+      datasets: [{
+        label: 'Nyregistrerade hundar',
+        data: dogCounts,
+        borderColor: COLORS.amber,
+        backgroundColor: COLORS.amber + '22',
+        fill: true,
+        tension: 0.15,
+        pointRadius: years8.map(y => y === '2021' ? 6 : 3)
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: COLORS.rule } }
+      }
+    }
+  });
+
+  // 02b: Hund förändring per år, staplar
+  new Chart(document.getElementById('chartDogChange'), {
+    type: 'bar',
+    data: {
+      labels: years7,
+      datasets: [{
+        label: 'Förändring mot föregående år',
+        data: dogChange,
+        backgroundColor: dogChange.map(v => v >= 0 ? COLORS.amber : COLORS.sand)
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => (ctx.raw > 0 ? '+' : '') + ctx.raw + '%' } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: COLORS.rule }, ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+
+  // Hund ägarbyten
+  new Chart(document.getElementById('chartOwnerChange'), {
+    type: 'line',
+    data: {
+      labels: years7,
+      datasets: [{
+        label: 'Ägarbyten',
+        data: ownerChanges,
+        spanGaps: true,
+        borderColor: COLORS.amber,
+        backgroundColor: COLORS.amber,
+        segment: {
+          borderDash: ctx => (ctx.p0DataIndex === 0 && ctx.p1DataIndex === 2) ? [2,6] : undefined
+        },
+        pointStyle: years7.map(y => y === '2022' ? 'rectRot' : 'circle'),
+        pointRadius: years7.map(y => (y === '2022' || y === '2023') ? 6 : 3),
+        tension: 0.15
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataIndex === 3
+              ? 'cirka 18 000, uppskattat'
+              : ctx.raw + ' ägarbyten'
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: COLORS.rule } }
+      }
+    }
+  });
+
+  // 03: Skaffade vs lämnade bort, indexerat
+  new Chart(document.getElementById('chartIndexCompare'), {
+    type: 'line',
+    data: {
+      labels: years7,
+      datasets: [
+        {
+          label: 'Skaffade, nyregistreringar',
+          data: dogIndex,
+          borderColor: COLORS.amber,
+          backgroundColor: COLORS.amber,
+          tension: 0.15
+        },
+        {
+          label: 'Lämnade bort, ägarbyten',
+          data: ownerIndex,
+          spanGaps: true,
+          borderColor: COLORS.sand,
+          backgroundColor: COLORS.sand,
+          borderDash: [2,6],
+          tension: 0.15
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': index ' + ctx.raw } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          grid: { color: COLORS.rule },
+          title: { display: true, text: 'Index, 2019 = 100', color: COLORS.inkMute }
+        }
+      }
+    }
+  });
+
+  // 04: Katt, sökintresse
+  new Chart(document.getElementById('chartCat'), {
+    type: 'bar',
+    data: {
+      labels: ['Hund', 'Katt', 'Kattungar', 'Kanin'],
+      datasets: [{
+        label: 'Ökning i sökningar (%)',
+        data: [91, 67, 100, 92],
+        backgroundColor: [COLORS.copper + '55', COLORS.copper + '55', COLORS.copper, COLORS.copper + '55']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => '+' + ctx.raw + '% sökningar, april till maj 2020 mot 2019' } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: COLORS.rule }, ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+
+  // 05: Häst, prisökning med normalband
+  new Chart(document.getElementById('chartHorse'), {
+    type: 'bar',
+    data: {
+      labels: ['Alla raser', 'Islandshäst', 'SWB'],
+      datasets: [
+        {
+          label: 'Prisökning 2021 (%)',
+          data: [15, 18, 11],
+          backgroundColor: [COLORS.sand + '55', COLORS.sand, COLORS.sand + '55'],
+          order: 1
+        },
+        {
+          label: 'Normalt intervall, topp',
+          data: [10, 10, 10],
+          type: 'line',
+          borderColor: 'transparent',
+          pointRadius: 0,
+          fill: '+1',
+          backgroundColor: COLORS.rule + 'aa',
+          order: 0
+        },
+        {
+          label: 'Normalt intervall, botten',
+          data: [4, 4, 4],
+          type: 'line',
+          borderColor: 'transparent',
+          pointRadius: 0,
+          fill: false,
+          order: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          filter: item => item.datasetIndex === 0,
+          callbacks: { label: ctx => '+' + ctx.raw + '% pris, normalt 4 till 10%' }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: COLORS.rule }, ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+
+  // Toggle for the dog count section
+  document.querySelectorAll('.djurboom .chart-toggle .toggle-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.djurboom .chart-toggle .toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      var target = btn.getAttribute('data-show');
+      document.getElementById('dogCountLine').style.display = target === 'dogCountLine' ? 'block' : 'none';
+      document.getElementById('dogCountBar').style.display = target === 'dogCountBar' ? 'block' : 'none';
+    });
+  });
+})();
+</script>
