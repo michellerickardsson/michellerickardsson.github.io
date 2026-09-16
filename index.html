@@ -62,14 +62,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <nav class="hero__nav">
-    <div class="hero__logo">
-      <img src="starlogo.png" alt="Michelle Rickardsson" />
-    </div>
-    <div class="hero__navlinks">
-      <a href="#currently"><b>01</b> currently</a>
-      <a href="#experience"><b>02</b> experience</a>
-      <a href="#about"><b>03</b> about</a>
-      <a href="#contact"><b>04</b> contact</a>
+        <div class="hero__navlinks">
+      <a href="#currently" data-dl-event="nav_click" data-dl-section="currently"><b>01</b> currently</a>
+      <a href="#experience" data-dl-event="nav_click" data-dl-section="experience"><b>02</b> experience</a>
+      <a href="#about" data-dl-event="nav_click" data-dl-section="about"><b>03</b> about</a>
+      <a href="#contact" data-dl-event="nav_click" data-dl-section="contact"><b>04</b> contact</a>
     </div>
   </nav>
 
@@ -197,14 +194,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </span>
   </h2>
 
-  <ul class="contact__links">
+    <ul class="contact__links">
     <li>
       <span>Email</span>
-      <a href="mailto:contact@michellerickardsson.com">contact@michellerickardsson.com</a>
+      <a href="mailto:contact@michellerickardsson.com" data-dl-event="contact_click" data-dl-method="email">contact@michellerickardsson.com</a>
     </li>
     <li>
       <span>LinkedIn</span>
-      <a class="button" href="https://www.linkedin.com/in/michelle-rickardsson-069485132">Michelle Rickardsson</a>
+      <a class="button" href="https://www.linkedin.com/in/michelle-rickardsson-069485132" data-dl-event="contact_click" data-dl-method="linkedin">Michelle Rickardsson</a>
     </li>
   </ul>
 
@@ -535,6 +532,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     underlines.forEach(function (p) { observer.observe(p); });
   }
 })();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[data-dl-event]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var payload = { event: el.getAttribute('data-dl-event') };
+      Array.from(el.attributes).forEach(function (attr) {
+        if (attr.name.startsWith('data-dl-') && attr.name !== 'data-dl-event') {
+          payload[attr.name.replace('data-dl-', '')] = attr.value;
+        }
+      });
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(payload);
+    });
+  });
+});
 </script>
 </body>
 </html>
