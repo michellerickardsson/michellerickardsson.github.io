@@ -355,7 +355,7 @@ body {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  max-width: 24ch;
+  max-width: 34ch;
 }
 
 /* the hand-drawn flower doodle, sitting inline right after the contact
@@ -442,7 +442,7 @@ body {
   --rule: #94815f;
 }
 
-/* the light panel should hug its content tightly, not sit in a sea of
+/* the light panel should hug its content tightly, not sit i en sea of
    empty sand — cut the section's usual vertical breathing room */
 .panel--light .section {
   padding-top: 2.5rem;
