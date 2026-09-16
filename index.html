@@ -224,6 +224,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     requestAnimationFrame(raf);
   }
 
+  // true once the page can't scroll any further — used to force any
+  // scroll-tied element near the bottom of the page (like the contact
+  // flower) fully revealed even if it never reaches its normal trigger
+  // point, since there's no more page left to scroll through
+  function atPageBottom() {
+    return (window.scrollY + window.innerHeight) >= (document.documentElement.scrollHeight - 2);
+  }
+
   // ---- dissolve transition: a grid of vertical bars that flips cell by
   // cell between dark and light as you scroll, redrawn every frame while
   // in view, a continuous reaction to scroll, not a one-off trigger ----
@@ -399,8 +407,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       function updatePhoto() {
         var rect = canvas.getBoundingClientRect();
         var vh = window.innerHeight;
-        var raw = (vh * 0.85 - rect.top) / (rect.height + vh * 0.3);
+        // the trigger window is sized to the viewport, not the photo box,
+        // so it always finishes during a normal scroll instead of getting
+        // stuck partway (which read as the photo being "cut off")
+        var raw = (vh * 0.9 - rect.top) / (vh * 0.6);
         var progress = Math.max(0, Math.min(1, raw));
+        if (atPageBottom()) progress = 1;
         canvas.__progress = progress;
         draw(progress);
       }
@@ -486,8 +498,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function update() {
       var rect = wrap.getBoundingClientRect();
       var vh = window.innerHeight;
-      var raw = (vh * 0.9 - rect.top) / (rect.height + vh * 0.3);
-      canvas.__progress = Math.max(0, Math.min(1, raw));
+      // same viewport-sized trigger window as the photo, so it also
+      // reliably reaches a full reveal during a normal scroll
+      var raw = (vh * 0.9 - rect.top) / (vh * 0.6);
+      var progress = Math.max(0, Math.min(1, raw));
+      if (atPageBottom()) progress = 1;
+      canvas.__progress = progress;
       draw(canvas.__progress);
     }
     window.addEventListener('scroll', function () {
