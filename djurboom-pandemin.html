@@ -118,6 +118,66 @@
     color: var(--ink-mute);
     margin: 2px 0 0;
   }
+  .djurboom .plan-section {
+    margin-top: 6rem;
+    padding-top: 3rem;
+    border-top: 3px solid var(--amber);
+  }
+  .djurboom .plan-section .kicker {
+    margin-bottom: 0.5rem;
+  }
+  .djurboom .plan-section h2.plan-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 900;
+    margin: 0 0 2.5rem;
+  }
+  .djurboom .plan-heading {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 3rem 0 1rem;
+  }
+  .djurboom .plan-card {
+    background: var(--rule);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    margin: 0 0 1.25rem;
+  }
+  .djurboom .plan-card b {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    margin-bottom: 0.3rem;
+  }
+  .djurboom .plan-card p {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+  }
+  .djurboom .plan-card .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 0.5rem;
+  }
+  .djurboom .stat-fact {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .djurboom .social-preview {
+    background: var(--rule);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+    white-space: pre-line;
+    margin: 0 0 1.5rem;
+  }
+
   .djurboom .byline {
     font-size: 13px;
     color: var(--ink-mute);
@@ -210,7 +270,89 @@
     </dl>
   </div>
 
+  <div class="plan-section">
+    <p class="kicker">Innehållsplan</p>
+    <h2 class="plan-title">Nerv, källor och strategi bakom storyn</h2>
+
+    <p>Nerven: pandemin gav Sverige en våg av nya hundar. Alla skrev om boomen medan den pågick, 2021. Nästan ingen har frågat vad som hände med hundarna efteråt. Frågan ställs medvetet i två delar, hur många skaffade hund och vad hände med dem sen, så läsaren inte behöver redan känna till köpsiffrorna för att förstå vad artikeln handlar om.</p>
+
+    <h3 class="plan-heading">1. Intervjupersoner</h3>
+    <p>Tre olika typer av källor, en för varje typ av tyngd i artikeln, kopplade till en specifik graf ovan. Kontaktades inte i praktiken inom ramen för denna skoluppgift, listas som research inför en verklig pitch.</p>
+
+    <div class="plan-card">
+      <span class="tag">Akademisk tyngd</span>
+      <b>Therese Rehn, forskare vid SLU</b>
+      <p>Har forskat på hur hundar påverkas av att lämnas ensamma och på det känslomässiga bandet mellan hund och ägare. Medförfattare till en studie från 2026 om återkommande mönster hos hundar med separationsproblem.</p>
+      <p>Kopplas till: grafen som jämför hemarbete med hundköp, och grafen som visar fördröjningen mellan skaffade och lämnade bort.</p>
+      <p>Exempelfråga: Finns det stöd i forskningen för att hundar som vant sig vid ägaren hemma reagerar starkare när det förändras igen?</p>
+    </div>
+
+    <div class="plan-card">
+      <span class="tag">Organisatorisk tyngd</span>
+      <b>Hundstallet, pressansvarig eller verksamhetsledare</b>
+      <p>Har i flera år uttalat sig i media om ökat tryck efter pandemin och sitter på egen statistik över mottagna hundar.</p>
+      <p>Kopplas till: ägarbytesgrafen, för att bekräfta eller nyansera Jordbruksverkets siffror med verksamhetens egna observationer.</p>
+      <p>Exempelfråga: Märks det i era egna siffror att omplaceringarna toppade några år efter pandemins hundboom, inte under den?</p>
+    </div>
+
+    <div class="plan-card">
+      <span class="tag">Personlig tyngd</span>
+      <b>Privatperson som skaffade hund under pandemin</b>
+      <p>Behöver inte ha lämnat bort sin hund, bara kunna berätta hur vardagen förändrades när hemarbetet minskade.</p>
+      <p>Kopplas till: hundgrafen över nyregistreringar, som en mänsklig röst bakom en av de 78 052.</p>
+      <p>Exempelfråga: Märkte du någon skillnad i hundens beteende när du gick tillbaka till kontoret?</p>
+    </div>
+
+    <h3 class="plan-heading">2. Varför sociala medier, enligt journalisterna själva</h3>
+    <p>Inte för att pitcha direkt, det vill journalister uttryckligen inte: bara <span class="stat-fact">4 procent</span> vill bli kontaktade via sociala medier, och <span class="stat-fact">19 procent</span> blockerar en kommunikatör som hör av sig oombett där. <span class="stat-fact">97 procent</span> vill ha kontakt via mejl.</p>
+    <p>Anledningen att ändå publicera är att sociala medier är där journalister redan research:ar. <span class="stat-fact">83 procent</span> använder sociala medier för att hämta information, och <span class="stat-fact">59 procent</span> specifikt för att hitta experter eller intervjupersoner, vilket direkt motiverar intervjupersonerna ovan.</p>
+
+    <svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin:1.5rem 0;">
+      <text x="10" y="30" font-family="Archivo, system-ui, sans-serif" font-size="20" font-weight="700" fill="var(--ink)">Var journalister planerar bli mer aktiva</text>
+      <text x="10" y="52" font-family="Inter, system-ui, sans-serif" font-size="13" fill="var(--ink-mute)">Andel svenska journalister, kommande år</text>
+
+      <line x1="10" y1="300" x2="810" y2="300" stroke="var(--rule)" stroke-width="1"/>
+      <line x1="10" y1="120" x2="810" y2="120" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 6"/>
+      <text x="810" y="116" font-family="Inter, system-ui, sans-serif" font-size="12" fill="var(--ink-mute)" text-anchor="end">0%</text>
+
+      <rect x="90" y="121" width="110" height="135" rx="3" fill="var(--amber)"/>
+      <text x="145" y="110" font-family="Archivo, system-ui, sans-serif" font-size="19" font-weight="700" fill="var(--amber)" text-anchor="middle">+44%</text>
+      <text x="145" y="325" font-family="Inter, system-ui, sans-serif" font-size="14" fill="var(--ink-soft)" text-anchor="middle">Instagram</text>
+
+      <rect x="300" y="121" width="110" height="101" rx="3" fill="var(--copper)"/>
+      <text x="355" y="110" font-family="Archivo, system-ui, sans-serif" font-size="19" font-weight="700" fill="var(--copper)" text-anchor="middle">+33%</text>
+      <text x="355" y="325" font-family="Inter, system-ui, sans-serif" font-size="14" fill="var(--ink-soft)" text-anchor="middle">LinkedIn</text>
+
+      <rect x="510" y="121" width="110" height="52" rx="3" fill="var(--sand)" opacity="0.55"/>
+      <text x="565" y="110" font-family="Archivo, system-ui, sans-serif" font-size="19" font-weight="700" fill="var(--sand)" text-anchor="middle">-17%</text>
+      <text x="565" y="325" font-family="Inter, system-ui, sans-serif" font-size="14" fill="var(--ink-soft)" text-anchor="middle">Twitter/X</text>
+
+      <text x="10" y="365" font-family="Inter, system-ui, sans-serif" font-size="12.5" fill="var(--ink-mute)">Källa: Cision State of the Media 2023, svensk delrapport, 117 svenska journalister</text>
+    </svg>
+
+    <h3 class="plan-heading">3. Producerat innehåll för sociala medier</h3>
+
+    <p><b class="stat-fact">Socialt inlägg (LinkedIn / Instagram)</b></p>
+    <div class="social-preview">Hur många skaffade hund under pandemin? Och vad hände med dem när allt gick tillbaka till det normala?
+
+Den första frågan skrev alla om 2021. Den andra har nästan ingen ställt.
+
+Jag grävde i Jordbruksverkets egna siffror för att svara på båda, från köptoppen 2021 till vad som hände fyra år senare. Svaret finns redan i myndighetens statistik, ingen har bara lagt ihop den.
+
+Spoiler: köpen och lämnandet rör sig i otakt, med nästan exakt två års fördröjning. Och ingen räknar officiellt hur många som faktiskt lämnades bort, bara hur många som bytte ägare.
+
+Samma mönster syns hos katt och häst också, fast med olika mått.
+
+Hela genomgången: michellerickardsson.github.io/djurboom-pandemin.html
+
+#datajournalistik #husdjur #pandemin</div>
+
+    <p><b class="stat-fact">Bildkort</b> (delbar grafik, samma mörka palett som denna sida): "78 052 skaffade hund 2021" som kicker, "Vad hände sen?" som huvudrubrik, med källhänvisning längst ner. Tänkt att fungera fristående i ett flöde, omslag när länken delas vidare.</p>
+
+  </div>
+
 </div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
