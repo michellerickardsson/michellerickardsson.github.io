@@ -144,4 +144,14 @@ document.addEventListener('DOMContentLoaded', function () {
             item.marker.setPopupContent(popupHtml(item.spot, score, cloudCover));
           })
           .catch(function (err) {
-            console.error('Kunde inte hämta väder för ' 
+                       console.error('Kunde inte hämta väder för ' + item.spot.name, err);
+            item.marker.setPopupContent('<div class="stargazing-popup"><h4>' + item.spot.name + '</h4><p>Could not load weather data.</p></div>');
+          });
+      });
+    })
+    .catch(function (err) {
+      console.error('Kunde inte hämta måne/norrsken-data', err);
+      document.getElementById('tonightMoon').textContent = 'Unavailable';
+      document.getElementById('tonightAurora').textContent = 'Unavailable';
+    });
+});
