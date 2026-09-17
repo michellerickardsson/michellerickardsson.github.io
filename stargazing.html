@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stargazing — Growth portfolio</title>
+  <meta name="description" content="Find the best spot in Stockholm to see stars tonight, based on live weather, moon and aurora data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="stargazing.css" />
+</head>
+<body class="stargazing-page">
+
+  <nav class="hero__nav" style="padding: 2rem var(--pad-x) 0;">
+    <div class="hero__logo">
+      <img src="starlogo.png" alt="Michelle Rickardsson" />
+    </div>
+    <div class="hero__navlinks">
+      <a href="index.html">&larr; back to portfolio</a>
+    </div>
+  </nav>
+
+  <main class="section">
+    <div class="section__head">
+      <span class="section__num">04</span>
+      <h2 class="section__title">Stargazing
+        <svg class="section__underline" viewBox="0 0 300 12" preserveAspectRatio="none">
+          <path class="draw-underline" d="M2,7 C40,2 70,11 110,6 C150,1 180,10 220,5 C250,2 270,9 298,5" />
+        </svg>
+      </h2>
+    </div>
+
+    <p class="stargazing__intro">
+      Where in Stockholm is the sky darkest tonight? This app checks live weather,
+      moon phase and aurora activity, combines it with an estimated light pollution
+      level for a handful of nature areas around the city, and scores each one.
+      Click a marker for the details.
+    </p>
+
+    <div class="stargazing__tonight" id="stargazingTonight">
+      <h3>Tonight, everywhere in Stockholm</h3>
+      <dl class="about__facts about__facts--inline">
+        <div><dt>Moon</dt><dd id="tonightMoon">Loading…</dd></div>
+        <div><dt>Aurora activity</dt><dd id="tonightAurora">Loading…</dd></div>
+        <div><dt>Meteor shower</dt><dd id="tonightMeteor">Loading…</dd></div>
+      </dl>
+    </div>
+
+    <div id="stargazingMap" class="stargazing__map"></div>
+
+    <div class="stargazing__legend">
+      <span><i class="stargazing__dot stargazing__dot--good"></i> Good (70+)</span>
+      <span><i class="stargazing__dot stargazing__dot--fair"></i> Fair (40–69)</span>
+      <span><i class="stargazing__dot stargazing__dot--poor"></i> Poor (&lt;40)</span>
+      <span><i class="stargazing__dot stargazing__dot--loading"></i> Loading</span>
+    </div>
+
+    <p class="stargazing__note">
+      Light pollution levels are estimated by hand for each location (there's no
+      free live API for this), based on distance from central Stockholm. Weather,
+      moon phase and aurora activity are fetched live from Open-Meteo and NOAA.
+    </p>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="stargazing.js"></script>
+</body>
+</html>
