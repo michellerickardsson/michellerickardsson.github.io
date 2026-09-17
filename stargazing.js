@@ -39,6 +39,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var COLORS = { good: '#4caf50', fair: '#e8a33d', poor: '#d1533d' };
   var POLLUTION_PENALTY = { low: 0, moderate: 15, high: 30 };
   var OVERVIEW_HOURS = [18, 19, 20, 21, 22, 23, 0, 1, 2, 3];
+  var ASK_PLACEHOLDERS = [
+    'When should I go stargazing?',
+    'Where should I go tonight?',
+    'Will I see the stars?',
+    'Is tonight worth the drive?',
+    'When is the sky darkest?'
+  ];
 
   function hourLabel(h) {
     return (h < 10 ? '0' : '') + h + ':00';
@@ -88,6 +95,32 @@ document.addEventListener('DOMContentLoaded', function () {
     if (score >= 41) return 'The Milky Way is faintly visible near the horizon.';
     if (score >= 21) return 'The Big Dipper and bright constellations are visible, nothing more.';
     return 'Only the Moon and the brightest planets are visible.';
+  }
+
+  function scoreStateLabel(score) {
+    if (score >= 80) return 'Stellar';
+    if (score >= 60) return 'Worth looking up';
+    if (score >= 40) return 'Could be a good night';
+    return 'Not tonight';
+  }
+
+  function scoreVerdict(score) {
+    if (score >= 80) return 'Worth the trip.';
+    if (score >= 60) return 'Looking good.';
+    if (score >= 40) return 'Could be worth it.';
+    return 'Not tonight.';
+  }
+
+  function animateScore(el, target) {
+    var startTime = null;
+    var duration = 600;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      el.textContent = Math.round(progress * target) + '/100';
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
 
   function fetchAuroraKp() {
@@ -190,6 +223,15 @@ document.addEventListener('DOMContentLoaded', function () {
     return Math.max(0, Math.min(100, Math.round(score)));
   }
 
+  function starIcon(color) {
+    return L.divIcon({
+      className: 'star-marker',
+      html: '<svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z" fill="' + color + '" stroke="#0d0f14" stroke-width="1"/></svg>',
+      iconSize: [22, 22],
+      iconAnchor: [11, 11]
+    });
+  }
+
   var map = L.map('stargazingMap');
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors',
@@ -217,7 +259,9 @@ document.addEventListener('DOMContentLoaded', function () {
     region.places.forEach(function (spot) {
       if (!spot.week || !spot.marker) return;
       var score = scoreForHour(spot, overviewDayIndex, overviewHour);
-      spot.marker.setStyle({ fillColor: COLORS[categoryForScore(score)] });
+      spot.marker.setIcon(starIcon(COLORS[categoryForScore(score)]));
+      spot.marker.unbindTooltip();
+      spot.marker.bindTooltip(score + ' — ' + scoreVerdict(score), { direction: 'top', offset: [0, -14], className: 'sg-tooltip' });
     });
   }
 
@@ -281,7 +325,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!spot.week) {
       document.getElementById('detailScore').textContent = '–';
-      document.getElementById('detailBortle').textContent = 'Loading…';
+      document.getElementById('detailStateLabel').textContent = '';
+      document.getElementById('detailBortle').textContent = 'Checking the clouds…';
       document.getElementById('detailCloud').textContent = '–';
       document.getElementById('dayOutlook').innerHTML = '';
       document.getElementById('hourlyStrip').innerHTML = '';
@@ -289,8 +334,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var day = spot.week[selectedDayIndex];
-    document.getElementById('detailScore').textContent = day.score + '/100';
-    document.getElementById('detailBortle').textContent = bortleDescription(day.score);
+    animateScore(document.getElementById('detailScore'), day.score);
+    document.getElementById('detailStateLabel').textContent = scoreStateLabel(day.score);
+    document.getElementById('detailBortle').textContent = day.score < 40
+      ? 'Still good if you just want to look at a dark sky, not stars.'
+      : bortleDescription(day.score);
     document.getElementById('detailCloud').textContent = day.cloud + '%';
 
     renderDayOutlook(spot);
@@ -364,16 +412,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     region.places.forEach(function (spot) {
-      var marker = L.circleMarker([spot.lat, spot.lon], {
-        radius: 9,
-        color: '#0d0f14',
-        weight: 1,
-        fillColor: '#7c7a72',
-        fillOpacity: 0.9
-      }).addTo(markersLayer);
+      var marker = L.marker([spot.lat, spot.lon], { icon: starIcon('#7c7a72') }).addTo(markersLayer);
 
-      marker.on('mouseover', function () { marker.setRadius(13); });
-      marker.on('mouseout', function () { marker.setRadius(9); });
       marker.on('click', function () {
         map.flyTo([spot.lat, spot.lon], Math.max(region.zoom, 12), { duration: 0.6 });
         selectedDayIndex = 0;
@@ -404,11 +444,19 @@ document.addEventListener('DOMContentLoaded', function () {
     if (q.indexOf('meteor') !== -1) {
       return sharedData.meteorShower ? sharedData.meteorShower + ' is active right now.' : 'No meteor shower is active right now.';
     }
-    if (q.indexOf('best') !== -1) {
+    if (q.indexOf('best') !== -1 || q.indexOf('where') !== -1) {
       var scored = currentPlaces.filter(function (p) { return p.week; });
       if (!scored.length) return 'Data is still loading, try again in a moment.';
       var best = scored.reduce(function (a, b) { return b.week[0].score > a.week[0].score ? b : a; });
       return best.name + ' has the highest score right now (' + best.week[0].score + '/100).';
+    }
+    if (q.indexOf('worth') !== -1 || q.indexOf('should i go') !== -1 || q.indexOf('will i see') !== -1) {
+      var scored2 = currentPlaces.filter(function (p) { return p.week; });
+      if (!scored2.length) return 'Data is still loading, try again in a moment.';
+      var best2 = scored2.reduce(function (a, b) { return b.week[0].score > a.week[0].score ? b : a; });
+      return best2.week[0].score >= 60
+        ? 'Yes — ' + best2.name + ' looks ' + scoreStateLabel(best2.week[0].score).toLowerCase() + ' tonight.'
+        : 'Not really tonight, but ' + best2.name + ' is your best bet.';
     }
     var matched = currentPlaces.filter(function (p) {
       return q.indexOf(p.name.toLowerCase().split(',')[0]) !== -1;
@@ -421,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (q.indexOf('cloud') !== -1) {
       return 'Try naming a place, e.g. "how cloudy is it in Judarskogen?".';
     }
-    return 'I didn\'t quite understand that. Try asking about clouds, the moon, aurora, the darkest time, the best spot, or a specific place.';
+    return 'I didn\'t quite understand that. Try asking about clouds, the moon, aurora, the darkest time, or the best spot.';
   }
 
   document.querySelectorAll('.region-btn').forEach(function (btn) {
@@ -435,6 +483,79 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!question) return;
     document.getElementById('askAnswer').textContent = answerQuestion(question);
   });
+
+  var askPlaceholderIndex = 0;
+  setInterval(function () {
+    var input = document.getElementById('askInput');
+    if (document.activeElement === input || input.value) return;
+    askPlaceholderIndex = (askPlaceholderIndex + 1) % ASK_PLACEHOLDERS.length;
+    input.setAttribute('placeholder', ASK_PLACEHOLDERS[askPlaceholderIndex]);
+  }, 4000);
+
+  var eggStar = document.getElementById('eggStar');
+  var eggMsg = document.getElementById('eggMsg');
+  eggStar.addEventListener('click', function () {
+    eggMsg.classList.add('show');
+    setTimeout(function () { eggMsg.classList.remove('show'); }, 2500);
+  });
+
+  (function () {
+    var canvas = document.getElementById('heroStars');
+    var ctx = canvas.getContext('2d');
+    function resize() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var stars = [];
+    for (var i = 0; i < 45; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.3,
+        base: Math.random() * 0.5 + 0.2,
+        speed: Math.random() * 0.001 + 0.0005,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    var shoot = null;
+    var nextShoot = performance.now() + 4000 + Math.random() * 4000;
+
+    function frame(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(function (s) {
+        var o = s.base + Math.sin(t * s.speed + s.phase) * 0.25;
+        ctx.fillStyle = 'rgba(210, 220, 240,' + Math.max(0, o) + ')';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, 7);
+        ctx.fill();
+      });
+
+      if (!shoot && t > nextShoot) {
+        shoot = { x: Math.random() * canvas.width * 0.6, y: Math.random() * canvas.height * 0.3, vx: 5, vy: 2.2, life: 0 };
+      }
+      if (shoot) {
+        shoot.x += shoot.vx;
+        shoot.y += shoot.vy;
+        shoot.life++;
+        ctx.strokeStyle = 'rgba(230, 235, 250,' + Math.max(0, 1 - shoot.life / 20) + ')';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(shoot.x, shoot.y);
+        ctx.lineTo(shoot.x - 16, shoot.y - 7);
+        ctx.stroke();
+        if (shoot.life > 20) {
+          shoot = null;
+          nextShoot = t + 15000 + Math.random() * 15000;
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
 
   renderOverviewControls();
   loadRegion('stockholm');

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stargazing — Growth portfolio</title>
-  <meta name="description" content="Find the best spot and time to see stars, based on live weather, moon and aurora data." />
+  <title>A Stargazer's Guide — Growth portfolio</title>
+  <meta name="description" content="For those who look up. Find the best spot and time to see stars, based on live weather, moon and aurora data." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
@@ -14,31 +14,35 @@
 </head>
 <body class="stargazing-page">
 
-  <nav class="hero__nav" style="padding: 2rem var(--pad-x) 0;">
-    <div class="hero__logo">
-      <img src="starlogo.png" alt="Michelle Rickardsson" />
+  <div class="sg-hero">
+    <canvas id="heroStars" class="sg-hero__canvas"></canvas>
+
+    <nav class="hero__nav" style="padding: 2rem var(--pad-x) 0; position: relative; z-index: 2;">
+      <div class="hero__logo">
+        <img src="starlogo.png" alt="Michelle Rickardsson" />
+      </div>
+      <div class="hero__navlinks">
+        <a href="index.html">&larr; back to portfolio</a>
+      </div>
+    </nav>
+
+    <div class="sg-hero__content">
+      <div class="sg-hero__brand">A Stargazer's Guide</div>
+      <div class="sg-hero__tagline">For those who look up.</div>
+      <img src="stargazer-mark.png" alt="" class="sg-hero__mark" />
+      <button class="sg-egg" id="eggStar" aria-label="star">
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 4.2 4.4.4-3.4 3 1 4.4L12 11.6 8.4 14 9.4 9.6 6 6.6l4.4-.4z"/></svg>
+      </button>
+      <span class="sg-egg__msg" id="eggMsg">You found me.</span>
     </div>
-    <div class="hero__navlinks">
-      <a href="index.html">&larr; back to portfolio</a>
-    </div>
-  </nav>
+  </div>
 
   <main class="section">
-    <div class="section__head">
-      <span class="section__num">04</span>
-      <h2 class="section__title">Stargazing
-        <svg class="section__underline" viewBox="0 0 300 12" preserveAspectRatio="none">
-          <path class="draw-underline" d="M2,7 C40,2 70,11 110,6 C150,1 180,10 220,5 C250,2 270,9 298,5" />
-        </svg>
-      </h2>
-    </div>
 
-    <p class="stargazing__intro">
-      Where and when is the sky darkest? This app checks live weather, moon phase
-      and aurora activity, combines it with an estimated light pollution level for
-      real nature spots, and scores each one up to a week ahead. Click a marker on
-      the map for the full details of that spot.
-    </p>
+    <div class="stargazing__intro2">
+      <div class="stargazing__intro2-tagline">For nights worth staying up for.</div>
+      <p class="stargazing__intro2-sub">Click a star on the map for more info.</p>
+    </div>
 
     <div class="stargazing__region-toggle">
       <button class="region-btn" data-region="stockholm">Stockholm</button>
@@ -55,10 +59,13 @@
     <div id="stargazingMap" class="stargazing__map"></div>
 
     <div class="stargazing__legend">
-      <span><i class="stargazing__dot stargazing__dot--good"></i> Good (70+)</span>
-      <span><i class="stargazing__dot stargazing__dot--fair"></i> Fair (40–69)</span>
-      <span><i class="stargazing__dot stargazing__dot--poor"></i> Poor (&lt;40)</span>
-      <span><i class="stargazing__dot stargazing__dot--loading"></i> Loading</span>
+      <div class="stargazing__legend-title">Star Score</div>
+      <div class="stargazing__legend-items">
+        <span><svg width="13" height="13" viewBox="0 0 24 24" class="stargazing__star stargazing__star--good"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg> Good (70+)</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" class="stargazing__star stargazing__star--fair"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg> Fair (40–69)</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" class="stargazing__star stargazing__star--poor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg> Poor (&lt;40)</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" class="stargazing__star stargazing__star--loading"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg> Loading</span>
+      </div>
     </div>
 
     <div class="stargazing__tonight">
@@ -69,8 +76,8 @@
           <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           <div>
             <div class="tonight__label">Moon</div>
-            <div id="tonightMoon" class="tonight__value">Loading…</div>
-            <div id="tonightMoonImpact" class="tonight__sub">Loading…</div>
+            <div id="tonightMoon" class="tonight__value">Checking the moon…</div>
+            <div id="tonightMoonImpact" class="tonight__sub"></div>
           </div>
         </div>
 
@@ -78,7 +85,7 @@
           <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9c2.5-3 5-3 7 0s4.5 3 7 0 4.5-3 6 0M2 15c2.5-3 5-3 7 0s4.5 3 7 0 4.5-3 6 0"/></svg>
           <div>
             <div class="tonight__label">Aurora activity</div>
-            <div id="tonightAurora" class="tonight__value">Loading…</div>
+            <div id="tonightAurora" class="tonight__value">Checking tonight's conditions…</div>
           </div>
         </div>
 
@@ -86,7 +93,7 @@
           <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5z"/><path d="M13 9L4 20"/></svg>
           <div>
             <div class="tonight__label">Meteor shower</div>
-            <div id="tonightMeteor" class="tonight__value">Loading…</div>
+            <div id="tonightMeteor" class="tonight__value"></div>
           </div>
         </div>
 
@@ -94,7 +101,7 @@
           <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
           <div>
             <div class="tonight__label">Darkest tonight</div>
-            <div id="tonightDark" class="tonight__value">Loading…</div>
+            <div id="tonightDark" class="tonight__value">Looking for darker skies…</div>
           </div>
         </div>
 
@@ -113,7 +120,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="detail__icon detail__icon--star"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
           <div>
             <div id="detailScore" class="detail__value"></div>
-            <div class="detail__label">star score</div>
+            <div id="detailStateLabel" class="detail__label"></div>
           </div>
         </div>
         <div class="detail__stat">
@@ -132,25 +139,21 @@
     </div>
 
     <div class="stargazing__ask">
-      <h3>Ask about tonight</h3>
+      <h3>Ask the sky</h3>
       <form id="askForm" class="ask__form">
-        <input type="text" id="askInput" placeholder="e.g. when is it darkest tonight?" />
-        <button type="submit">Ask</button>
+        <input type="text" id="askInput" placeholder="When should I go stargazing?" />
+        <button type="submit">Ask the sky &rarr;</button>
       </form>
       <p id="askAnswer" class="ask__answer"></p>
     </div>
 
     <p class="stargazing__note">
-      Light pollution levels are estimated by hand for each location (there's no
-      free live API for this). Weather and aurora activity are fetched live from
-      Open-Meteo and NOAA. Moon phase and the darkest time of night are calculated
-      from real astronomical data (sunrise-sunset.org) and a known lunar formula.
-      Moonlight's impact is grouped into rough steps based on illumination — in
-      reality brightness doesn't increase perfectly linearly, especially near full
-      moon. The star score is mapped to the real Bortle dark-sky scale used by
-      astronomers. The map preview and week-ahead outlook only apply the aurora
-      bonus to tonight, since real-time solar activity can't be forecast that far
-      ahead.
+      Light pollution levels are estimated by hand for each location. Weather and
+      aurora activity are fetched live from Open-Meteo and NOAA. Moon phase and
+      darkness are calculated from real astronomical data (sunrise-sunset.org) and
+      a known lunar formula. Star Score is mapped to the real Bortle dark-sky scale
+      astronomers use. The map preview only applies the aurora bonus to tonight,
+      since solar activity can't be forecast a week ahead.
     </p>
   </main>
 
