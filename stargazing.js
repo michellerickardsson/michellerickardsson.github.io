@@ -38,7 +38,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var COLORS = { good: '#4caf50', fair: '#e8a33d', poor: '#d1533d' };
   var POLLUTION_PENALTY = { low: 0, moderate: 15, high: 30 };
-  var OVERVIEW_HOURS = [18, 19, 20, 21, 22, 23];
+  var OVERVIEW_HOURS = [18, 19, 20, 21, 22, 23, 0, 1, 2, 3];
+
+  function hourLabel(h) {
+    return (h < 10 ? '0' : '') + h + ':00';
+  }
 
   function getActiveMeteorShower(date) {
     var year = date.getFullYear();
@@ -101,27 +105,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function fetchWeekCloudCover(lat, lon) {
     var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat +
-      '&longitude=' + lon + '&hourly=cloud_cover&timezone=auto&forecast_days=7';
+      '&longitude=' + lon + '&hourly=cloud_cover&timezone=auto&forecast_days=8';
     return fetch(url)
       .then(function (res) { return res.json(); })
       .then(function (data) {
-        var days = {};
-        var order = [];
-        data.hourly.time.forEach(function (t, i) {
-          var dateStr = t.slice(0, 10);
-          if (!days[dateStr]) { days[dateStr] = []; order.push(dateStr); }
-          days[dateStr].push({ hour: parseInt(t.slice(11, 13), 10), label: t.slice(11, 16), cloudCover: data.hourly.cloud_cover[i] });
+        return data.hourly.time.map(function (t, i) {
+          var dt = new Date(t);
+          return { dt: dt, hour: dt.getHours(), label: hourLabel(dt.getHours()), cloudCover: data.hourly.cloud_cover[i] };
         });
-        return order.map(function (dateStr) { return { dateStr: dateStr, hours: days[dateStr] }; });
       });
   }
 
-  function eveningHours(hours) {
-    var evening = hours.filter(function (h) { return h.hour >= 18 && h.hour <= 23; });
-    return evening.length ? evening : hours;
+  function buildNights(allHours) {
+    var base = new Date();
+    base.setHours(0, 0, 0, 0);
+    var nights = [];
+    for (var i = 0; i < 7; i++) {
+      var start = new Date(base.getTime() + i * 86400000 + 18 * 3600000);
+      var end = new Date(base.getTime() + (i + 1) * 86400000 + 4 * 3600000);
+      var hours = allHours.filter(function (h) { return h.dt >= start && h.dt < end; });
+      nights.push({ dateStr: start.toISOString().slice(0, 10), hours: hours });
+    }
+    return nights;
   }
 
   function averageCloudCover(hours) {
+    if (!hours.length) return 100;
     var sum = hours.reduce(function (a, h) { return a + h.cloudCover; }, 0);
     return Math.round(sum / hours.length);
   }
@@ -238,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
     OVERVIEW_HOURS.forEach(function (h) {
       var btn = document.createElement('button');
       btn.className = 'pick-btn' + (h === overviewHour ? ' active' : '');
-      btn.textContent = h + ':00';
+      btn.textContent = hourLabel(h);
       btn.addEventListener('click', function () {
         overviewHour = h;
         renderOverviewControls();
@@ -288,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var strip = document.getElementById('hourlyStrip');
     strip.innerHTML = '';
-    eveningHours(day.hours).forEach(function (h) {
+    day.hours.forEach(function (h) {
       var card = document.createElement('div');
       card.className = 'hour-card';
       card.style.background = skyColor(h.hour, h.cloudCover);
@@ -299,16 +308,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function loadSpot(spot, marker) {
     spot.marker = marker;
-    fetchWeekCloudCover(spot.lat, spot.lon).then(function (weekRaw) {
-      spot.week = weekRaw.map(function (day, i) {
-        var evening = eveningHours(day.hours);
-        var cloud = averageCloudCover(evening);
-        var dayDate = new Date(day.dateStr + 'T20:00:00');
+    fetchWeekCloudCover(spot.lat, spot.lon).then(function (allHours) {
+      var nights = buildNights(allHours);
+      spot.week = nights.map(function (night, i) {
+        var cloud = averageCloudCover(night.hours);
+        var dayDate = new Date(night.dateStr + 'T20:00:00');
         var moon = getMoonPhase(dayDate);
         var meteor = getActiveMeteorShower(dayDate);
         var kp = i === 0 ? sharedData.kp : 0;
         var score = computeScoreForDay(cloud, moon.illumination, spot.lightPollution, !!meteor, kp);
-        return { dateStr: day.dateStr, hours: day.hours, cloud: cloud, score: score, moonIllumination: moon.illumination, meteorActive: !!meteor };
+        return { dateStr: night.dateStr, hours: night.hours, cloud: cloud, score: score, moonIllumination: moon.illumination, meteorActive: !!meteor };
       });
       updateOverviewColors();
       if (selectedSpot === spot) renderDetailPanel(spot);
