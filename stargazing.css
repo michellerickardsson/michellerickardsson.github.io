@@ -37,6 +37,70 @@
   color: var(--bg-color);
 }
 
+.stargazing__overview {
+  border: 1px solid var(--rule);
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.overview__label {
+  font-size: 10px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.8rem;
+}
+
+.overview__row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.overview__row + .overview__row {
+  margin-top: 8px;
+}
+
+.stargazing__map {
+  width: 100%;
+  height: 480px;
+  border: 1px solid var(--rule);
+  margin-bottom: 1.5rem;
+  background: var(--rule);
+}
+
+.leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.stargazing__legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+}
+
+.stargazing__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.stargazing__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.stargazing__dot--good { background: #4caf50; }
+.stargazing__dot--fair { background: #e8a33d; }
+.stargazing__dot--poor { background: #d1533d; }
+.stargazing__dot--loading { background: #7c7a72; }
+
 .stargazing__tonight {
   border: 1px solid var(--rule);
   padding: 1.5rem;
@@ -90,45 +154,6 @@
   margin-top: 2px;
 }
 
-.stargazing__map {
-  width: 100%;
-  height: 480px;
-  border: 1px solid var(--rule);
-  margin-bottom: 1.5rem;
-  background: var(--rule);
-}
-
-.leaflet-tile-pane {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-}
-
-.stargazing__legend {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-  margin-bottom: 1.5rem;
-}
-
-.stargazing__legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.stargazing__dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.stargazing__dot--good { background: #4caf50; }
-.stargazing__dot--fair { background: #e8a33d; }
-.stargazing__dot--poor { background: #d1533d; }
-.stargazing__dot--loading { background: #7c7a72; }
-
 .stargazing__detail {
   border: 1px solid var(--rule);
   padding: 1.5rem;
@@ -140,6 +165,44 @@
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 1rem;
+}
+
+.detail__days {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.2rem;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.pick-btn {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+}
+
+.pick-btn:hover {
+  border-color: var(--copper);
+}
+
+.pick-btn.active {
+  background: var(--copper);
+  border-color: var(--copper);
+  color: var(--bg-color);
+}
+
+.pick-btn__score {
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .detail__stats {
@@ -179,6 +242,14 @@
   color: var(--ink-soft);
   font-size: 0.9rem;
   margin-bottom: 1rem;
+}
+
+.strip__caption {
+  font-size: 11px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
 }
 
 .detail__strip {

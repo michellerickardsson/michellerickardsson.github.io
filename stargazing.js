@@ -38,14 +38,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var COLORS = { good: '#4caf50', fair: '#e8a33d', poor: '#d1533d' };
   var POLLUTION_PENALTY = { low: 0, moderate: 15, high: 30 };
+  var OVERVIEW_HOURS = [18, 19, 20, 21, 22, 23];
 
-  function getActiveMeteorShower(now) {
-    var year = now.getFullYear();
+  function getActiveMeteorShower(date) {
+    var year = date.getFullYear();
     var found = null;
     METEOR_SHOWERS.forEach(function (shower) {
       var start = new Date(year, shower.start[0] - 1, shower.start[1]);
       var end = new Date(year, shower.end[0] - 1, shower.end[1], 23, 59, 59);
-      if (now >= start && now <= end) found = shower.name;
+      if (date >= start && date <= end) found = shower.name;
     });
     return found;
   }
@@ -70,19 +71,19 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function moonImpactDescription(illumination) {
-    if (illumination < 10) return 'Nästan ingen månljus — optimalt för svaga stjärnor och Vintergatan.';
-    if (illumination < 40) return 'Svagt månljus — stör knappt stjärnkikningen.';
-    if (illumination < 70) return 'Måttligt månljus — kan dämpa de svagaste stjärnorna.';
-    if (illumination < 90) return 'Starkt månljus — begränsar sikten av Vintergatan markant.';
-    return 'Fullmåne — fungerar som naturlig ljusförorening.';
+    if (illumination < 10) return 'Almost no moonlight — ideal for faint stars and the Milky Way.';
+    if (illumination < 40) return 'Faint moonlight — barely affects stargazing.';
+    if (illumination < 70) return 'Moderate moonlight — can dim the faintest stars.';
+    if (illumination < 90) return 'Strong moonlight — significantly limits visibility of the Milky Way.';
+    return 'Full moon — acts like natural light pollution.';
   }
 
   function bortleDescription(score) {
-    if (score >= 81) return 'Vintergatan syns med detaljer, kanske mörka dammoln.';
-    if (score >= 61) return 'Vintergatan syns tydligt över hela himlen.';
-    if (score >= 41) return 'Vintergatan skymtar svagt nära horisonten.';
-    if (score >= 21) return 'Karlavagnen och starka stjärnbilder syns, inget mer.';
-    return 'Bara månen och de klaraste planeterna syns.';
+    if (score >= 81) return 'The Milky Way is visible with detail, maybe even dark dust lanes.';
+    if (score >= 61) return 'The Milky Way is clearly visible across the sky.';
+    if (score >= 41) return 'The Milky Way is faintly visible near the horizon.';
+    if (score >= 21) return 'The Big Dipper and bright constellations are visible, nothing more.';
+    return 'Only the Moon and the brightest planets are visible.';
   }
 
   function fetchAuroraKp() {
@@ -93,29 +94,36 @@ document.addEventListener('DOMContentLoaded', function () {
         return lastRow.Kp;
       })
       .catch(function (err) {
-        console.error('Kunde inte hämta norrsken-data', err);
+        console.error('Could not fetch aurora data', err);
         return 0;
       });
   }
 
-  function fetchHourlyCloudCover(lat, lon) {
+  function fetchWeekCloudCover(lat, lon) {
     var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat +
-      '&longitude=' + lon + '&hourly=cloud_cover&timezone=auto&forecast_days=1';
+      '&longitude=' + lon + '&hourly=cloud_cover&timezone=auto&forecast_days=7';
     return fetch(url)
       .then(function (res) { return res.json(); })
       .then(function (data) {
-        return data.hourly.time.map(function (t, i) {
-          return { hour: parseInt(t.slice(11, 13), 10), label: t.slice(11, 16), cloudCover: data.hourly.cloud_cover[i] };
+        var days = {};
+        var order = [];
+        data.hourly.time.forEach(function (t, i) {
+          var dateStr = t.slice(0, 10);
+          if (!days[dateStr]) { days[dateStr] = []; order.push(dateStr); }
+          days[dateStr].push({ hour: parseInt(t.slice(11, 13), 10), label: t.slice(11, 16), cloudCover: data.hourly.cloud_cover[i] });
         });
+        return order.map(function (dateStr) { return { dateStr: dateStr, hours: days[dateStr] }; });
       });
   }
 
-  function averageCloudCover(hourlyArr) {
-    var startIndex = new Date().getHours();
-    var slice = hourlyArr.slice(startIndex, startIndex + 6);
-    if (!slice.length) slice = hourlyArr.slice(-3);
-    var sum = slice.reduce(function (a, h) { return a + h.cloudCover; }, 0);
-    return Math.round(sum / slice.length);
+  function eveningHours(hours) {
+    var evening = hours.filter(function (h) { return h.hour >= 18 && h.hour <= 23; });
+    return evening.length ? evening : hours;
+  }
+
+  function averageCloudCover(hours) {
+    var sum = hours.reduce(function (a, h) { return a + h.cloudCover; }, 0);
+    return Math.round(sum / hours.length);
   }
 
   function lerp(a, b, t) {
@@ -154,9 +162,23 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!end || !begin) return null;
       return { start: new Date(end), end: new Date(begin) };
     }).catch(function (err) {
-      console.error('Kunde inte hämta mörkaste tiden', err);
+      console.error('Could not fetch darkest time', err);
       return null;
     });
+  }
+
+  function categoryForScore(score) {
+    if (score >= 70) return 'good';
+    if (score >= 40) return 'fair';
+    return 'poor';
+  }
+
+  function computeScoreForDay(cloudCover, moonIllumination, lightPollution, meteorActive, kp) {
+    var penalty = POLLUTION_PENALTY[lightPollution] != null ? POLLUTION_PENALTY[lightPollution] : 15;
+    var score = 100 - cloudCover * 0.6 - moonIllumination * 0.3 - penalty;
+    if (kp >= 5) score += 10;
+    if (meteorActive) score += 10;
+    return Math.max(0, Math.min(100, Math.round(score)));
   }
 
   var map = L.map('stargazingMap');
@@ -168,54 +190,130 @@ document.addEventListener('DOMContentLoaded', function () {
   var markersLayer = L.layerGroup().addTo(map);
   var currentRegionKey = 'stockholm';
   var selectedSpot = null;
+  var selectedDayIndex = 0;
+  var overviewDayIndex = 0;
+  var overviewHour = 21;
   var sharedData = { moon: null, kp: 0, meteorShower: null, darkWindow: null };
 
-  function categoryForScore(score) {
-    if (score >= 70) return 'good';
-    if (score >= 40) return 'fair';
-    return 'poor';
+  function scoreForHour(spot, dayIndex, hour) {
+    var day = spot.week[dayIndex];
+    var hourData = day.hours.filter(function (h) { return h.hour === hour; })[0];
+    var cloud = hourData ? hourData.cloudCover : day.cloud;
+    var kp = dayIndex === 0 ? sharedData.kp : 0;
+    return computeScoreForDay(cloud, day.moonIllumination, spot.lightPollution, day.meteorActive, kp);
   }
 
-  function computeScore(cloudCover, lightPollution) {
-    var penalty = POLLUTION_PENALTY[lightPollution] != null ? POLLUTION_PENALTY[lightPollution] : 15;
-    var score = 100 - cloudCover * 0.6 - sharedData.moon.illumination * 0.3 - penalty;
-    if (sharedData.kp >= 5) score += 10;
-    if (sharedData.meteorShower) score += 10;
-    return Math.max(0, Math.min(100, Math.round(score)));
+  function updateOverviewColors() {
+    var region = REGIONS[currentRegionKey];
+    region.places.forEach(function (spot) {
+      if (!spot.week || !spot.marker) return;
+      var score = scoreForHour(spot, overviewDayIndex, overviewHour);
+      spot.marker.setStyle({ fillColor: COLORS[categoryForScore(score)] });
+    });
+  }
+
+  function renderOverviewControls() {
+    var dayContainer = document.getElementById('overviewDays');
+    var hourContainer = document.getElementById('overviewHours');
+    dayContainer.innerHTML = '';
+    hourContainer.innerHTML = '';
+
+    var today = new Date();
+    for (var i = 0; i < 7; i++) {
+      (function (i) {
+        var d = new Date(today.getTime() + i * 86400000);
+        var label = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' });
+        var btn = document.createElement('button');
+        btn.className = 'pick-btn' + (i === overviewDayIndex ? ' active' : '');
+        btn.textContent = label;
+        btn.addEventListener('click', function () {
+          overviewDayIndex = i;
+          renderOverviewControls();
+          updateOverviewColors();
+        });
+        dayContainer.appendChild(btn);
+      })(i);
+    }
+
+    OVERVIEW_HOURS.forEach(function (h) {
+      var btn = document.createElement('button');
+      btn.className = 'pick-btn' + (h === overviewHour ? ' active' : '');
+      btn.textContent = h + ':00';
+      btn.addEventListener('click', function () {
+        overviewHour = h;
+        renderOverviewControls();
+        updateOverviewColors();
+      });
+      hourContainer.appendChild(btn);
+    });
+  }
+
+  function renderDayOutlook(spot) {
+    var container = document.getElementById('dayOutlook');
+    container.innerHTML = '';
+    spot.week.forEach(function (day, i) {
+      var btn = document.createElement('button');
+      btn.className = 'pick-btn' + (i === selectedDayIndex ? ' active' : '');
+      var d = new Date(day.dateStr + 'T12:00:00');
+      var label = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' });
+      btn.innerHTML = label + '<span class="pick-btn__score">' + day.score + '</span>';
+      btn.addEventListener('click', function () {
+        selectedDayIndex = i;
+        renderDetailPanel(spot);
+      });
+      container.appendChild(btn);
+    });
   }
 
   function renderDetailPanel(spot) {
     selectedSpot = spot;
     document.getElementById('detailPanel').hidden = false;
     document.getElementById('detailName').textContent = spot.name;
-    document.getElementById('detailScore').textContent = (spot.score != null ? spot.score : '–') + '/100';
-    document.getElementById('detailBortle').textContent = spot.score != null ? bortleDescription(spot.score) : 'Laddar…';
-    document.getElementById('detailCloud').textContent = (spot.cloudCoverNow != null ? spot.cloudCoverNow : '–') + '%';
+
+    if (!spot.week) {
+      document.getElementById('detailScore').textContent = '–';
+      document.getElementById('detailBortle').textContent = 'Loading…';
+      document.getElementById('detailCloud').textContent = '–';
+      document.getElementById('dayOutlook').innerHTML = '';
+      document.getElementById('hourlyStrip').innerHTML = '';
+      return;
+    }
+
+    var day = spot.week[selectedDayIndex];
+    document.getElementById('detailScore').textContent = day.score + '/100';
+    document.getElementById('detailBortle').textContent = bortleDescription(day.score);
+    document.getElementById('detailCloud').textContent = day.cloud + '%';
+
+    renderDayOutlook(spot);
 
     var strip = document.getElementById('hourlyStrip');
     strip.innerHTML = '';
-    if (spot.hourly) {
-      var startIndex = new Date().getHours();
-      spot.hourly.slice(startIndex, startIndex + 6).forEach(function (h) {
-        var card = document.createElement('div');
-        card.className = 'hour-card';
-        card.style.background = skyColor(h.hour, h.cloudCover);
-        card.innerHTML = '<div class="hour-time">' + h.label + '</div><div class="hour-clear">' + (100 - h.cloudCover) + '%</div>';
-        strip.appendChild(card);
-      });
-    }
+    eveningHours(day.hours).forEach(function (h) {
+      var card = document.createElement('div');
+      card.className = 'hour-card';
+      card.style.background = skyColor(h.hour, h.cloudCover);
+      card.innerHTML = '<div class="hour-time">' + h.label + '</div><div class="hour-clear">' + (100 - h.cloudCover) + '%</div>';
+      strip.appendChild(card);
+    });
   }
 
   function loadSpot(spot, marker) {
-    fetchHourlyCloudCover(spot.lat, spot.lon).then(function (hourly) {
-      spot.hourly = hourly;
-      spot.cloudCoverNow = averageCloudCover(hourly);
-      spot.score = computeScore(spot.cloudCoverNow, spot.lightPollution);
-      var category = categoryForScore(spot.score);
-      marker.setStyle({ fillColor: COLORS[category] });
+    spot.marker = marker;
+    fetchWeekCloudCover(spot.lat, spot.lon).then(function (weekRaw) {
+      spot.week = weekRaw.map(function (day, i) {
+        var evening = eveningHours(day.hours);
+        var cloud = averageCloudCover(evening);
+        var dayDate = new Date(day.dateStr + 'T20:00:00');
+        var moon = getMoonPhase(dayDate);
+        var meteor = getActiveMeteorShower(dayDate);
+        var kp = i === 0 ? sharedData.kp : 0;
+        var score = computeScoreForDay(cloud, moon.illumination, spot.lightPollution, !!meteor, kp);
+        return { dateStr: day.dateStr, hours: day.hours, cloud: cloud, score: score, moonIllumination: moon.illumination, meteorActive: !!meteor };
+      });
+      updateOverviewColors();
       if (selectedSpot === spot) renderDetailPanel(spot);
     }).catch(function (err) {
-      console.error('Kunde inte hämta väder för ' + spot.name, err);
+      console.error('Could not fetch weather for ' + spot.name, err);
     });
   }
 
@@ -226,18 +324,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('tonightMoon').textContent = sharedData.moon.phase + ' (' + sharedData.moon.illumination + '% lit)';
     document.getElementById('tonightMoonImpact').textContent = moonImpactDescription(sharedData.moon.illumination);
-    document.getElementById('tonightMeteor').textContent = sharedData.meteorShower ? sharedData.meteorShower + ' aktivt' : 'Inget aktivt ikväll';
+    document.getElementById('tonightMeteor').textContent = sharedData.meteorShower ? sharedData.meteorShower + ' active' : 'None active tonight';
 
     fetchAuroraKp().then(function (kp) {
       sharedData.kp = kp;
-      document.getElementById('tonightAurora').textContent = 'Kp ' + kp + (kp >= 5 ? ' — norrsken möjligt' : ' — låg aktivitet');
+      document.getElementById('tonightAurora').textContent = 'Kp ' + kp + (kp >= 5 ? ' — aurora possible' : ' — low activity');
+      updateOverviewColors();
     });
 
     fetchDarkestWindow(lat, lon).then(function (win) {
       sharedData.darkWindow = win;
       document.getElementById('tonightDark').textContent = win
         ? (formatTime(win.start) + '–' + formatTime(win.end))
-        : 'Ingen fullständig mörker (ljus natt)';
+        : 'No full darkness tonight (bright night)';
     });
   }
 
@@ -246,6 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
     markersLayer.clearLayers();
     document.getElementById('detailPanel').hidden = true;
     selectedSpot = null;
+    selectedDayIndex = 0;
 
     var region = REGIONS[key];
     map.setView(region.center, region.zoom);
@@ -267,6 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
       marker.on('mouseout', function () { marker.setRadius(9); });
       marker.on('click', function () {
         map.flyTo([spot.lat, spot.lon], Math.max(region.zoom, 12), { duration: 0.6 });
+        selectedDayIndex = 0;
         renderDetailPanel(spot);
       });
 
@@ -280,38 +381,38 @@ document.addEventListener('DOMContentLoaded', function () {
     var q = question.toLowerCase();
     var currentPlaces = REGIONS[currentRegionKey].places;
 
-    if (q.indexOf('mörk') !== -1) {
+    if (q.indexOf('dark') !== -1) {
       return sharedData.darkWindow
-        ? 'Det blir som mörkast mellan ' + formatTime(sharedData.darkWindow.start) + ' och ' + formatTime(sharedData.darkWindow.end) + ' ikväll.'
-        : 'Det blir inte helt mörkt just nu (ljus natt).';
+        ? 'It will be darkest between ' + formatTime(sharedData.darkWindow.start) + ' and ' + formatTime(sharedData.darkWindow.end) + ' tonight.'
+        : 'It won\'t get fully dark tonight (bright night).';
     }
-    if (q.indexOf('norrsken') !== -1 || q.indexOf('aurora') !== -1) {
-      return 'Kp-index just nu är ' + sharedData.kp + (sharedData.kp >= 5 ? ', så norrsken kan vara möjligt.' : ', vilket är låg aktivitet.');
+    if (q.indexOf('aurora') !== -1) {
+      return 'The Kp-index right now is ' + sharedData.kp + (sharedData.kp >= 5 ? ', so aurora may be visible.' : ', which is low activity.');
     }
-    if (q.indexOf('mån') !== -1) {
-      return 'Månen är i fas "' + sharedData.moon.phase + '" och lyser ' + sharedData.moon.illumination + '%. ' + moonImpactDescription(sharedData.moon.illumination);
+    if (q.indexOf('moon') !== -1) {
+      return 'The moon is in "' + sharedData.moon.phase + '" phase and ' + sharedData.moon.illumination + '% lit. ' + moonImpactDescription(sharedData.moon.illumination);
     }
-    if (q.indexOf('meteor') !== -1 || q.indexOf('stjärnfall') !== -1) {
-      return sharedData.meteorShower ? sharedData.meteorShower + ' är aktivt just nu.' : 'Inget meteorregn är aktivt just nu.';
+    if (q.indexOf('meteor') !== -1) {
+      return sharedData.meteorShower ? sharedData.meteorShower + ' is active right now.' : 'No meteor shower is active right now.';
     }
-    if (q.indexOf('bäst') !== -1) {
-      var scored = currentPlaces.filter(function (p) { return p.score != null; });
-      if (!scored.length) return 'Data laddas fortfarande, försök om en liten stund.';
-      var best = scored.reduce(function (a, b) { return b.score > a.score ? b : a; });
-      return best.name + ' har just nu högst poäng (' + best.score + '/100).';
+    if (q.indexOf('best') !== -1) {
+      var scored = currentPlaces.filter(function (p) { return p.week; });
+      if (!scored.length) return 'Data is still loading, try again in a moment.';
+      var best = scored.reduce(function (a, b) { return b.week[0].score > a.week[0].score ? b : a; });
+      return best.name + ' has the highest score right now (' + best.week[0].score + '/100).';
     }
     var matched = currentPlaces.filter(function (p) {
       return q.indexOf(p.name.toLowerCase().split(',')[0]) !== -1;
     })[0];
     if (matched) {
-      return matched.score != null
-        ? matched.name + ': ' + matched.score + '/100, ' + matched.cloudCoverNow + '% molntäcke.'
-        : matched.name + ': data laddas fortfarande.';
+      return matched.week
+        ? matched.name + ': ' + matched.week[0].score + '/100, ' + matched.week[0].cloud + '% cloud cover.'
+        : matched.name + ': data still loading.';
     }
-    if (q.indexOf('moln') !== -1) {
-      return 'Säg gärna vilken plats du undrar över, t.ex. "hur mycket moln är det i Judarskogen?".';
+    if (q.indexOf('cloud') !== -1) {
+      return 'Try naming a place, e.g. "how cloudy is it in Judarskogen?".';
     }
-    return 'Jag förstod inte riktigt frågan. Prova att fråga om moln, måne, norrsken, mörkaste tiden, bästa platsen, eller en specifik plats.';
+    return 'I didn\'t quite understand that. Try asking about clouds, the moon, aurora, the darkest time, the best spot, or a specific place.';
   }
 
   document.querySelectorAll('.region-btn').forEach(function (btn) {
@@ -326,5 +427,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('askAnswer').textContent = answerQuestion(question);
   });
 
+  renderOverviewControls();
   loadRegion('stockholm');
 });
