@@ -36,17 +36,26 @@ document.addEventListener('DOMContentLoaded', function () {
     return found;
   }
 
-  function fetchMoonPhase() {
-    var unixSeconds = Math.floor(Date.now() / 1000);
-    return fetch('https://api.farmsense.net/v1/moonphases/?d=' + unixSeconds)
-      .then(function (res) { return res.json(); })
-      .then(function (rows) {
-        var data = rows[0];
-        return {
-          phase: data.Phase || (data.Moon && data.Moon[0]) || 'Unknown',
-          illumination: Math.round((data.Illumination || 0) * 100)
-        };
-      });
+  // farmsense.net (tidigare källa för månfas) svarar inte längre — API:et
+  // verkar ha lagts ner. Månfasen räknas därför ut lokalt med en känd
+  // astronomisk formel istället för att fråga en extern tjänst.
+  function getMoonPhase(date) {
+    var knownNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
+    var synodicMonth = 29.53058867;
+    var diffDays = (date.getTime() - knownNewMoon.getTime()) / 86400000;
+    var phaseIndex = ((diffDays % synodicMonth) + synodicMonth) % synodicMonth;
+    var illumination = (1 - Math.cos((phaseIndex / synodicMonth) * 2 * Math.PI)) / 2;
+    var phaseName;
+    if (phaseIndex < 1.84566) phaseName = 'New Moon';
+    else if (phaseIndex < 5.53699) phaseName = 'Waxing Crescent';
+    else if (phaseIndex < 9.22831) phaseName = 'First Quarter';
+    else if (phaseIndex < 12.91963) phaseName = 'Waxing Gibbous';
+    else if (phaseIndex < 16.61096) phaseName = 'Full Moon';
+    else if (phaseIndex < 20.30228) phaseName = 'Waning Gibbous';
+    else if (phaseIndex < 23.99361) phaseName = 'Last Quarter';
+    else if (phaseIndex < 27.68493) phaseName = 'Waning Crescent';
+    else phaseName = 'New Moon';
+    return { phase: phaseName, illumination: Math.round(illumination * 100) };
   }
 
   function fetchAuroraKp() {
@@ -55,6 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (rows) {
         var lastRow = rows[rows.length - 1];
         return parseFloat(lastRow[1]);
+      })
+      .catch(function (err) {
+        console.error('Kunde inte hämta norrsken-data', err);
+        return 0;
       });
   }
 
@@ -121,37 +134,30 @@ document.addEventListener('DOMContentLoaded', function () {
   var activeMeteorShower = getActiveMeteorShower(now);
   document.getElementById('tonightMeteor').textContent = activeMeteorShower ? activeMeteorShower + ' active' : 'None active tonight';
 
-  Promise.all([fetchMoonPhase(), fetchAuroraKp()])
-    .then(function (results) {
-      var moon = results[0];
-      var kp = results[1];
+  var moon = getMoonPhase(now);
+  document.getElementById('tonightMoon').textContent = moon.phase + ' (' + moon.illumination + '% lit)';
 
-      document.getElementById('tonightMoon').textContent = moon.phase + ' (' + moon.illumination + '% lit)';
-      document.getElementById('tonightAurora').textContent = 'Kp ' + kp + (kp >= 5 ? ' — possible aurora' : ' — low activity');
+  fetchAuroraKp().then(function (kp) {
+    document.getElementById('tonightAurora').textContent = 'Kp ' + kp + (kp >= 5 ? ' — possible aurora' : ' — low activity');
 
-      markers.forEach(function (item) {
-        fetchCloudCover(item.spot.lat, item.spot.lon)
-          .then(function (cloudCover) {
-            var score = computeScore({
-              cloudCover: cloudCover,
-              moonIllumination: moon.illumination,
-              kp: kp,
-              lightPollution: item.spot.lightPollution,
-              meteorActive: !!activeMeteorShower
-            });
-            var category = categoryForScore(score);
-            item.marker.setStyle({ fillColor: COLORS[category] });
-            item.marker.setPopupContent(popupHtml(item.spot, score, cloudCover));
-          })
-          .catch(function (err) {
-                       console.error('Kunde inte hämta väder för ' + item.spot.name, err);
-            item.marker.setPopupContent('<div class="stargazing-popup"><h4>' + item.spot.name + '</h4><p>Could not load weather data.</p></div>');
+    markers.forEach(function (item) {
+      fetchCloudCover(item.spot.lat, item.spot.lon)
+        .then(function (cloudCover) {
+          var score = computeScore({
+            cloudCover: cloudCover,
+            moonIllumination: moon.illumination,
+            kp: kp,
+            lightPollution: item.spot.lightPollution,
+            meteorActive: !!activeMeteorShower
           });
-      });
-    })
-    .catch(function (err) {
-      console.error('Kunde inte hämta måne/norrsken-data', err);
-      document.getElementById('tonightMoon').textContent = 'Unavailable';
-      document.getElementById('tonightAurora').textContent = 'Unavailable';
+          var category = categoryForScore(score);
+          item.marker.setStyle({ fillColor: COLORS[category] });
+          item.marker.setPopupContent(popupHtml(item.spot, score, cloudCover));
+        })
+        .catch(function (err) {
+          console.error('Kunde inte hämta väder för ' + item.spot.name, err);
+          item.marker.setPopupContent('<div class="stargazing-popup"><h4>' + item.spot.name + '</h4><p>Could not load weather data.</p></div>');
+        });
     });
+  });
 });
