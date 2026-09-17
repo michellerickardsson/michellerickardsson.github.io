@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stargazing — Growth portfolio</title>
-  <meta name="description" content="Find the best spot in Stockholm to see stars tonight, based on live weather, moon and aurora data." />
+  <meta name="description" content="Find the best spot and time to see stars tonight, based on live weather, moon and aurora data." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
@@ -34,18 +34,24 @@
     </div>
 
     <p class="stargazing__intro">
-      Where in Stockholm is the sky darkest tonight? This app checks live weather,
-      moon phase and aurora activity, combines it with an estimated light pollution
-      level for a handful of nature areas around the city, and scores each one.
-      Click a marker for the details.
+      Where is the sky darkest tonight? This app checks live weather, moon phase
+      and aurora activity, combines it with an estimated light pollution level for
+      real nature spots, and scores each one. Click a marker for the details.
     </p>
 
-    <div class="stargazing__tonight" id="stargazingTonight">
-      <h3>Tonight, everywhere in Stockholm</h3>
+    <div class="stargazing__region-toggle">
+      <button class="region-btn" data-region="stockholm">Stockholm</button>
+      <button class="region-btn" data-region="dalarna">Dalarna (Avesta)</button>
+    </div>
+
+    <div class="stargazing__tonight">
+      <h3>Tonight, in this region</h3>
       <dl class="about__facts about__facts--inline">
         <div><dt>Moon</dt><dd id="tonightMoon">Loading…</dd></div>
+        <div><dt>What that means</dt><dd id="tonightMoonImpact">Loading…</dd></div>
         <div><dt>Aurora activity</dt><dd id="tonightAurora">Loading…</dd></div>
         <div><dt>Meteor shower</dt><dd id="tonightMeteor">Loading…</dd></div>
+        <div><dt>Darkest tonight</dt><dd id="tonightDark">Loading…</dd></div>
       </dl>
     </div>
 
@@ -58,11 +64,51 @@
       <span><i class="stargazing__dot stargazing__dot--loading"></i> Loading</span>
     </div>
 
+    <div class="stargazing__detail" id="detailPanel" hidden>
+      <div class="detail__head">
+        <div id="detailName" class="detail__name"></div>
+      </div>
+
+      <div class="detail__stats">
+        <div class="detail__stat">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="detail__icon detail__icon--star"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.9 5.8 20.3l1.6-6.8L2.2 8.9l6.9-.6L12 2z"/></svg>
+          <div>
+            <div id="detailScore" class="detail__value"></div>
+            <div class="detail__label">star score</div>
+          </div>
+        </div>
+        <div class="detail__stat">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="detail__icon detail__icon--cloud"><path d="M7 18a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17.5 9.5 4.5 4.5 0 0 1 17 18H7z"/></svg>
+          <div>
+            <div id="detailCloud" class="detail__value"></div>
+            <div class="detail__label">cloud cover now</div>
+          </div>
+        </div>
+      </div>
+
+      <p id="detailBortle" class="detail__bortle"></p>
+
+      <div id="hourlyStrip" class="detail__strip"></div>
+    </div>
+
+    <div class="stargazing__ask">
+      <h3>Ask about tonight</h3>
+      <form id="askForm" class="ask__form">
+        <input type="text" id="askInput" placeholder="e.g. when is it darkest tonight?" />
+        <button type="submit">Ask</button>
+      </form>
+      <p id="askAnswer" class="ask__answer"></p>
+    </div>
+
     <p class="stargazing__note">
       Light pollution levels are estimated by hand for each location (there's no
-      free live API for this), based on distance from central Stockholm. Weather
-      and aurora activity are fetched live from Open-Meteo and NOAA. Moon phase
-      is calculated locally from the date.
+      free live API for this). Weather and aurora activity are fetched live from
+      Open-Meteo and NOAA. Moon phase and the darkest time of night are calculated
+      from real astronomical data (sunrise-sunset.org) and a known lunar formula.
+      Moonlight's impact is grouped into rough steps based on illumination — in
+      reality brightness doesn't increase perfectly linearly, especially near full
+      moon. The star score is mapped to the real Bortle dark-sky scale used by
+      astronomers.
     </p>
   </main>
 
