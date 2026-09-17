@@ -46,13 +46,42 @@
 
     <div class="stargazing__tonight">
       <h3>Tonight, in this region</h3>
-      <dl class="about__facts about__facts--inline">
-        <div><dt>Moon</dt><dd id="tonightMoon">Loading…</dd></div>
-        <div><dt>What that means</dt><dd id="tonightMoonImpact">Loading…</dd></div>
-        <div><dt>Aurora activity</dt><dd id="tonightAurora">Loading…</dd></div>
-        <div><dt>Meteor shower</dt><dd id="tonightMeteor">Loading…</dd></div>
-        <div><dt>Darkest tonight</dt><dd id="tonightDark">Loading…</dd></div>
-      </dl>
+      <div class="tonight__grid">
+
+        <div class="tonight__item">
+          <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <div>
+            <div class="tonight__label">Moon</div>
+            <div id="tonightMoon" class="tonight__value">Loading…</div>
+            <div id="tonightMoonImpact" class="tonight__sub">Loading…</div>
+          </div>
+        </div>
+
+        <div class="tonight__item">
+          <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 9c2.5-3 5-3 7 0s4.5 3 7 0 4.5-3 6 0M2 15c2.5-3 5-3 7 0s4.5 3 7 0 4.5-3 6 0"/></svg>
+          <div>
+            <div class="tonight__label">Aurora activity</div>
+            <div id="tonightAurora" class="tonight__value">Loading…</div>
+          </div>
+        </div>
+
+        <div class="tonight__item">
+          <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5z"/><path d="M13 9L4 20"/></svg>
+          <div>
+            <div class="tonight__label">Meteor shower</div>
+            <div id="tonightMeteor" class="tonight__value">Loading…</div>
+          </div>
+        </div>
+
+        <div class="tonight__item">
+          <svg class="tonight__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <div>
+            <div class="tonight__label">Darkest tonight</div>
+            <div id="tonightDark" class="tonight__value">Loading…</div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <div id="stargazingMap" class="stargazing__map"></div>
