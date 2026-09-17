@@ -66,7 +66,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <img src="starlogo.png" alt="Michelle Rickardsson" />
     </div>
     <div class="hero__navlinks">
-      <a href="#currently" data-dl-event="nav_click" data-dl-section="currently"><b>01</b> currently</a>
+      <a href="projects.html" data-dl-event="nav_click" data-dl-section="projects"><b>01</b> Berghs projects</a>
       <a href="#experience" data-dl-event="nav_click" data-dl-section="experience"><b>02</b> experience</a>
       <a href="#about" data-dl-event="nav_click" data-dl-section="about"><b>03</b> about</a>
       <a href="#contact" data-dl-event="nav_click" data-dl-section="contact"><b>04</b> contact</a>
@@ -104,6 +104,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       I'm currently studying growth marketing at Berghs School of Communication.
       I started recently, so this will be a growing portfolio over the coming year.
     </p>
+    <a href="projects.html" class="section__cta" data-dl-event="nav_click" data-dl-section="projects">See my Berghs projects <span aria-hidden="true">&rarr;</span></a>
   </section>
 
   <canvas class="dissolve dissolve--out" id="dissolveMid" height="90"></canvas>
@@ -152,14 +153,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </p>
       </div>
     </li>
+
+    <li class="case">
+      <div class="case__meta">
+        <span class="case__id">03</span>
+        <span class="case__tags">Photographer for advertising &amp; magazines · Gamleby · 2015–2017</span>
+      </div>
+      <div class="case__body">
+        <h3 class="case__title">Gamleby fotoskola</h3>
+        <p class="case__text">
+          Vocational school with one year of coursework in lighting, composition,
+          imagery, retouching, 3D and video filming and editing, followed by a
+          seven-month internship in Stockholm where I also completed my degree
+          project.
+        </p>
+      </div>
+    </li>
   </ol>
 
-  <dl class="about__facts about__facts--inline">
-    <div><dt>Education</dt><dd>Berghs School of Communication</dd><dd>Gamleby fotoskola, Editorial &amp; commercial photography</dd></div>
-    <div><dt>Tools</dt><dd>Photoshop, Capture One, Shopify, Centra</dd></div>
-    <div><dt>Also used</dt><dd>Avid, Final Cut, Premiere Pro, DaVinci Resolve, After Effects</dd></div>
-    <div><dt>Learning now</dt><dd>GA4, Google Tag Manager, GitHub, VS Code</dd></div>
-  </dl>
+  <div class="tools-block">
+    <h3 class="tools-block__title">Tools</h3>
+    <div class="tools-block__group">
+      <span class="tools-block__label">Primary</span>
+      <p class="tools-block__list">Photoshop, Capture One, Shopify, Centra</p>
+    </div>
+    <div class="tools-block__group">
+      <span class="tools-block__label">Also used</span>
+      <p class="tools-block__list">Avid, Final Cut, Premiere Pro, DaVinci Resolve, After Effects</p>
+    </div>
+    <div class="tools-block__group">
+      <span class="tools-block__label">Learning now</span>
+      <p class="tools-block__list">GA4, Google Tag Manager, GitHub, VS Code</p>
+    </div>
+  </div>
 </section>
 
 <!-- ===== 03 ABOUT ===== -->
@@ -218,24 +244,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (function () {
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- smooth scroll ----
   if (!reduceMotion && window.Lenis) {
     var lenis = new Lenis({ duration: 1.1, easing: function (t) { return 1 - Math.pow(1 - t, 3); } });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
   }
 
-  // true once the page can't scroll any further — used to force any
-  // scroll-tied element near the bottom of the page (like the contact
-  // flower) fully revealed even if it never reaches its normal trigger
-  // point, since there's no more page left to scroll through
   function atPageBottom() {
     return (window.scrollY + window.innerHeight) >= (document.documentElement.scrollHeight - 2);
   }
 
-  // ---- dissolve transition: a grid of vertical bars that flips cell by
-  // cell between dark and light as you scroll, redrawn every frame while
-  // in view, a continuous reaction to scroll, not a one-off trigger ----
   var darkColor = '#18130f';
   var lightColor = '#a89474';
 
@@ -262,7 +280,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var ctx = canvas.getContext('2d');
       var w = canvas.width, h = canvas.height;
       var cw = w / cols, ch = h / rows;
-      // direction "in": dark -> light as progress 0->1. "out": light -> dark.
       for (var c = 0; c < cols; c++) {
         for (var r = 0; r < rows; r++) {
           var t = cellThreshold[c][r];
@@ -288,8 +305,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (!d) return;
       var rect = d.canvas.getBoundingClientRect();
       var vh = window.innerHeight;
-      // progress 0 -> 1 as the canvas travels from just below the viewport's
-      // lower third up to just above its upper third
       var raw = (vh * 0.85 - rect.top) / (rect.height + vh * 0.35);
       var progress = Math.max(0, Math.min(1, raw));
       d.canvas.__progress = progress;
@@ -310,8 +325,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     updateDissolve();
   }
 
-  // ---- photo dissolve: the About photo resolves from a blocky, muted
-  // grid into the sharp image, cell by cell, as it scrolls into view ----
   (function () {
     var canvas = document.getElementById('aboutPhoto');
     if (!canvas) return;
@@ -334,7 +347,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var ctx = canvas.getContext('2d');
       var w = canvas.width, h = canvas.height;
       var cw = w / cols, ch = h / rows;
-      // cover-fit the source image into the canvas box
       var srcRatio = img.width / img.height, dstRatio = w / h;
       var sx, sy, sw, sh;
       if (srcRatio > dstRatio) {
@@ -350,16 +362,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             var csx = sx + (c / cols) * sw, csy = sy + (r / rows) * sh;
             ctx.drawImage(img, csx, csy, sw / cols, sh / rows, dx, dy, cw + 1, ch + 1);
           } else {
-            // leave transparent instead of filling with a color — works
-            // with a background-removed PNG without adding a visible box
             ctx.clearRect(dx, dy, cw + 1, ch + 1);
           }
         }
       }
     }
 
-    // if the PNG has a near-white background baked in instead of real
-    // transparency, this strips it so no white box shows behind the photo
     function stripWhiteBackground(sourceImg, callback) {
       var off = document.createElement('canvas');
       off.width = sourceImg.naturalWidth || sourceImg.width;
@@ -369,8 +377,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       try {
         var imageData = octx.getImageData(0, 0, off.width, off.height);
         var data = imageData.data;
-        // soft falloff instead of a hard cutoff — catches light halo/edge
-        // pixels around the cutout without clipping mid-tones abruptly
         var lowT = 195, highT = 250;
         for (var i = 0; i < data.length; i += 4) {
           var brightness = Math.min(data[i], data[i + 1], data[i + 2]);
@@ -381,8 +387,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         octx.putImageData(imageData, 0, 0);
       } catch (e) {
-        // cross-origin image data can't be read — fall back to the
-        // original image untouched rather than breaking the page
       }
       var processed = new Image();
       processed.onload = function () { callback(processed); };
@@ -402,15 +406,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     window.addEventListener('resize', resize);
 
     if (reduceMotion) {
-      // draw once ready() fires via resize()
     } else {
       var photoTicking = false;
       function updatePhoto() {
         var rect = canvas.getBoundingClientRect();
         var vh = window.innerHeight;
-        // the trigger window is sized to the viewport, not the photo box,
-        // so it always finishes during a normal scroll instead of getting
-        // stuck partway (which read as the photo being "cut off")
         var raw = (vh * 0.9 - rect.top) / (vh * 0.6);
         var progress = Math.max(0, Math.min(1, raw));
         if (atPageBottom()) progress = 1;
@@ -426,9 +426,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   })();
 
-  // ---- growth flower doodle next to the contact heading: your own PNG,
-  // tinted to the site's copper, revealed with a bottom-to-top wipe tied
-  // directly to scroll position ----
   (function () {
     var wrap = document.querySelector('.grow-flower');
     var canvas = document.getElementById('growFlowerCanvas');
@@ -473,8 +470,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     img.crossOrigin = 'anonymous';
     img.onload = function () {
-      // match the canvas box to the image's real proportions instead of
-      // guessing an aspect ratio — this is what was cutting the flower off
       var ratio = img.naturalHeight / img.naturalWidth;
       canvas.style.height = (canvas.clientWidth * ratio) + 'px';
       var copper = getComputedStyle(document.documentElement).getPropertyValue('--copper').trim() || '#c97a47';
@@ -499,8 +494,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function update() {
       var rect = wrap.getBoundingClientRect();
       var vh = window.innerHeight;
-      // same viewport-sized trigger window as the photo, so it also
-      // reliably reaches a full reveal during a normal scroll
       var raw = (vh * 0.9 - rect.top) / (vh * 0.6);
       var progress = Math.max(0, Math.min(1, raw));
       if (atPageBottom()) progress = 1;
@@ -515,7 +508,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     update();
   })();
 
-  // ---- drawn underlines under section titles, on scroll ----
   var underlines = Array.prototype.slice.call(document.querySelectorAll('.draw-underline'));
   underlines.forEach(function (path) {
     var len = path.getTotalLength();

@@ -27,8 +27,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Ingen padding och ingen max-width på body — annars kan inte hero-grafiken
-   gå ut i kanterna. Bredden sätts i stället per sektion längre ner. */
 body {
   font-family: var(--font-body);
   background-color: var(--bg-color);
@@ -38,7 +36,7 @@ body {
 }
 
 /* ============================================================
-   2. HERO — lagerordning och höjd
+   2. HERO
    ============================================================ */
 .hero {
   position: relative;
@@ -49,7 +47,6 @@ body {
   overflow: hidden;
 }
 
-/* z-index 0, inte -1. Med -1 hamnade grafiken bakom sidans bakgrund. */
 .hero__graphic {
   position: absolute;
   top: 0;
@@ -60,8 +57,6 @@ body {
   pointer-events: none;
 }
 
-/* position: relative krävs för att z-index ska gälla.
-   Utan den lägger sig texten under grafiken. */
 .hero__nav {
   position: relative;
   z-index: 2;
@@ -95,8 +90,6 @@ body {
   color: var(--copper);
 }
 
-/* margin-top: auto trycker ner texten till botten, så ordet "growth"
-   får plats ovanför rubriken i stället för att krocka med den. */
 .hero__content {
   position: relative;
   z-index: 2;
@@ -113,8 +106,6 @@ body {
   margin-bottom: 1.25rem;
 }
 
-/* Paret i rubriken: "line" och "scribble" får samma behandling
-   men olika färg, så de läser som varandras motsats. */
 .hero__line {
   color: var(--amber);
   font-weight: 900;
@@ -135,7 +126,7 @@ body {
 }
 
 /* ============================================================
-   3. SEKTIONER — bredden sätts här i stället för på body
+   3. SEKTIONER
    ============================================================ */
 .section,
 .contact {
@@ -151,8 +142,6 @@ body {
   margin-bottom: 1.4rem;
 }
 
-/* the drawn underline under each section title — same draw-on-scroll
-   technique as the hero line, just applied per heading */
 .section__underline {
   display: block;
   width: 100%;
@@ -191,6 +180,26 @@ body {
   color: var(--ink-soft);
   max-width: 52ch;
   margin: -1.5rem 0 3rem;
+}
+
+.section__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #1a1410;
+  text-decoration: none;
+  border-bottom: 1px solid #1a1410;
+  padding-bottom: 2px;
+  width: fit-content;
+  transition: color 0.2s, border-color 0.2s;
+  margin-top: -2rem;
+  margin-bottom: 2rem;
+}
+
+.section__cta:hover {
+  color: var(--copper);
+  border-color: var(--copper);
 }
 
 /* ============================================================
@@ -253,6 +262,49 @@ body {
 }
 
 /* ============================================================
+   TOOLS
+   ============================================================ */
+.tools-block {
+  border: 1px solid var(--rule);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  max-width: 640px;
+}
+
+.tools-block__title {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--copper);
+  margin-bottom: 1rem;
+}
+
+.tools-block__group {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.tools-block__group + .tools-block__group {
+  margin-top: 0.8rem;
+}
+
+.tools-block__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.tools-block__list {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+/* ============================================================
    OM MIG
    ============================================================ */
 .about {
@@ -288,8 +340,6 @@ body {
 }
 
 @media (min-width: 768px) {
-  /* pulls the photo up so it overlaps the gap above the About heading,
-     offset toward the right rather than flush with the column edge */
   .about__side {
     margin-top: -7rem;
     margin-left: auto;
@@ -313,8 +363,6 @@ body {
   padding-left: 1.5rem;
 }
 
-/* used in Experience, below the cases — full width, so it reads as a row
-   of credentials rather than a narrow sidebar list */
 .about__facts--inline {
   flex-direction: row;
   flex-wrap: wrap;
@@ -358,8 +406,6 @@ body {
   max-width: 34ch;
 }
 
-/* the hand-drawn flower doodle, sitting inline right after the contact
-   heading text — small, not a block of its own */
 .grow-flower {
   display: inline-block;
   width: 128px;
@@ -367,8 +413,6 @@ body {
   margin-left: 0.6rem;
 }
 
-/* height is set from JS once the image loads, matching its real
-   proportions — no guessed aspect-ratio here */
 .grow-flower canvas {
   display: block;
   width: 100%;
@@ -403,7 +447,6 @@ body {
   transition: color 0.2s;
 }
 
-/* a filled button instead of an underlined text link, for LinkedIn */
 .contact__links a.button {
   display: inline-block;
   background: #0a66c2;
@@ -430,8 +473,7 @@ body {
 }
 
 /* ============================================================
-   LJUS PANEL — sondaven-inspirerad sandfärgad yta, egna tokens
-   som skriver över de mörka bara inom den här ytan
+   LJUS PANEL
    ============================================================ */
 .panel--light {
   background-color: var(--sand);
@@ -442,17 +484,13 @@ body {
   --rule: #94815f;
 }
 
-/* the light panel should hug its content tightly, not sit i en sea of
-   empty sand — cut the section's usual vertical breathing room */
 .panel--light .section {
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
 }
 
 /* ============================================================
-   UPPLÖSNINGS-ÖVERGÅNG — ett rutnät av lodräta stavar som byter
-   färg cell för cell i takt med scroll, ritat på canvas. Ligger
-   i toppen/botten av den ljusa panelen, ovanpå dess bakgrund.
+   UPPLÖSNINGS-ÖVERGÅNG
    ============================================================ */
 .dissolve {
   display: block;
