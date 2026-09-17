@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (res) { return res.json(); })
       .then(function (rows) {
         var lastRow = rows[rows.length - 1];
-        return parseFloat(lastRow[1]);
+        return lastRow.Kp;
       })
       .catch(function (err) {
         console.error('Kunde inte hämta norrsken-data', err);
