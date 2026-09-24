@@ -98,7 +98,7 @@ body{overflow-x:clip}header{z-index:8}#growth-system{z-index:6!important;pointer
 /* A loose frame beneath the headline, with two contact destinations at the vine tips. */
 .hero{padding-bottom:190px}
 .root-field{position:relative;height:clamp(380px,38vw,550px);margin-top:35px}
-.contact-destination{position:absolute;z-index:7;font-size:clamp(27px,3.3vw,48px);letter-spacing:-.04em;line-height:1.2;color:var(--paper);padding:10px 0;white-space:nowrap}
+.contact-destination{position:absolute;z-index:7;font-size:clamp(27px,3.3vw,48px);letter-spacing:-.04em;line-height:1.2;color:var(--paper);padding:10px 0;white-space:nowrap;pointer-events:auto}
 #contact-email{left:12%;top:68%}
 #contact-linkedin{right:9%;top:83%}
 a.contact-destination{border-bottom:1px solid var(--line);transition:color .25s,border-color .25s}
