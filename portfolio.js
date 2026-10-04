@@ -105,14 +105,16 @@ function measure(){
  });
  request();
 }
-function stroke(pts,width,alpha,y,count=pts.length,taper=false){
+// y = what to subtract when drawing. viewTop = where the visible part of the page starts, in the
+// same coordinates as pts (the leaves are drawn in their own small coordinates, so it is 0 there).
+function stroke(pts,width,alpha,y,count=pts.length,taper=false,viewTop=y){
  const n=Math.min(pts.length,Math.floor(count));if(n<2)return;
  ctx.strokeStyle=`rgba(255,112,79,${alpha})`;ctx.lineCap='round';ctx.lineJoin='round';
  if(!taper){
   ctx.beginPath();ctx.lineWidth=width;let connected=false,visible=false;
   for(let i=1;i<n;i++){
    const a=pts[i-1],b=pts[i];
-   if(Math.max(a[1],b[1])<cullY-64||Math.min(a[1],b[1])>cullY+H+64){connected=false;continue;}
+   if(Math.max(a[1],b[1])<viewTop-64||Math.min(a[1],b[1])>viewTop+H+64){connected=false;continue;}
    if(!connected)ctx.moveTo(a[0],a[1]-y);
    ctx.lineTo(b[0],b[1]-y);connected=true;visible=true;
   }
@@ -192,7 +194,7 @@ let count=points.length;
 if(motion){count=1;while(count<points.length && points[count][1]<=front)count++;}
 count=Math.max(count,Math.floor(metrics.frameCount*frameIntro));
 if(intro>.95){
- stroke(points,W<760?3.3:4.2,.94,oy,count);
+ stroke(points,W<760?3.3:4.2,.94,oy,count,false,cullY);
  const rootTravel=Math.max(1,Math.min(metrics.rootH,D-viewportH*.22-metrics.rootY));
  const growth=motion?clamp((front-metrics.rootY)/rootTravel):1;
  if(count>=points.length && y+H>metrics.rootY-140 && y<metrics.rootY+metrics.rootH+140){
