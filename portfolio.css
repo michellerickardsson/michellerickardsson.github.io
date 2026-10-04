@@ -155,3 +155,6 @@ a.contact-destination:hover{color:var(--accent);border-color:var(--accent)}
 .round-arrow .ui-arrow{width:22px;height:22px}
 .contact-destination .ui-arrow{width:.7em;height:.7em;vertical-align:0}
 @media(max-width:540px){header{gap:16px}.brand img{width:132px;max-width:28vw;height:auto}nav{gap:clamp(10px,3vw,16px)}}
+.experience-story .experience-content .experience-more{margin:22px 0 0}
+.experience-link{color:var(--paper);border-bottom:1px solid var(--accent);padding-bottom:2px;transition:color .25s}
+.experience-link:hover{color:var(--accent)}

@@ -2,20 +2,32 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,smooth=t=>{t=clamp(t);return t*t*(3-2*t)};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');let motion=!reduced.matches;
 const canvas=$('#growth-system'),ctx=canvas.getContext('2d'),graph=$('#graph'),length=graph.getTotalLength(),work=$('#work'),profile=$('.profile');
-let W=innerWidth,H=innerHeight,D=0,queued=false,start=performance.now(),metrics={},points=[],branches=[],surfaceW=0,surfaceH=0,pixelRatio=0,viewportH=H,lastY=NaN,lastIntro=-1,resizeTimer;
+let W=innerWidth,H=innerHeight,D=0,queued=false,start=performance.now(),metrics={},points=[],branches=[],surfaceW=0,surfaceH=0,pixelRatio=0,viewportH=H,lastY=NaN,lastIntro=-1,resizeTimer,cullY=0;
 document.documentElement.classList.add('js');
 function curve(a,b,c,d,n=90){let out=[];for(let i=0;i<=n;i++){let t=i/n,u=1-t;out.push([u*u*u*a[0]+3*u*u*t*b[0]+3*u*t*t*c[0]+t*t*t*d[0],u*u*u*a[1]+3*u*u*t*b[1]+3*u*t*t*c[1]+t*t*t*d[1]])}return out}
+// Desktop: a viewport-sized canvas pinned to the screen and redrawn on every scroll.
+// Mobile: a canvas as tall as the whole page that scrolls WITH the page. Phones scroll on a
+// separate thread from JavaScript, so a pinned canvas lags behind the text and the thread
+// slides around. A canvas that is part of the page is moved by the browser itself, so the
+// thread stays glued to the content, and JS only has to redraw the growing tip.
 function sizeCanvas(){
- const dpr=Math.min(devicePixelRatio||1,W<=760?1.5:2);
- const height=W<=760?Math.max(H,typeof screen==='undefined'?H:screen.height):H;
+ const mobile=W<=760;
+ const height=mobile?D:H;
+ if(!height)return;
+ // keep the bitmap under ~12 million pixels so a long page can't exhaust a phone's memory
+ const dpr=Math.min(devicePixelRatio||1,mobile?1.5:2,Math.sqrt(12e6/(W*height)));
  if(surfaceW===W&&surfaceH===height&&pixelRatio===dpr)return;
  surfaceW=W;surfaceH=height;pixelRatio=dpr;
- canvas.style.position='fixed';canvas.style.width=W+'px';canvas.style.height=height+'px';
+ canvas.style.position=mobile?'absolute':'fixed';canvas.style.top='0';canvas.style.left='0';
+ canvas.style.width=mobile?'100%':W+'px';canvas.style.height=height+'px';
  canvas.width=Math.ceil(W*dpr);canvas.height=Math.ceil(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 function measure(){
  const widthChanged=innerWidth!==W;
  W=innerWidth;H=innerHeight;if(!D||widthChanged||W>760)viewportH=H;
+ // On mobile the canvas is part of the page, so collapse it before measuring or it would
+ // keep the page as tall as it used to be after a section closes.
+ if(canvas.style.position==='absolute'){canvas.style.height='0px';surfaceH=0}
  D=document.documentElement.scrollHeight;lastY=NaN;sizeCanvas();
  // Measure the actual headline text, not the full-width span box.
  const textRange=document.createRange();textRange.selectNodeContents($('.hero h1 .serif'));
@@ -31,6 +43,9 @@ function measure(){
  const cy=(t+b)/2,rr=20;
  const rail=Math.min(W-12,Math.max(label.right+18,r+24));
  const junction=[W*.53,rootY];
+ // Beside the About text the thread leans in towards the page on desktop, where that column is
+ // empty. On a phone the text fills the width, so it stays out in the right margin instead.
+ const side=f=>W<760?rail:W*f;
  // Keep the descent outside the paragraph. The loop surrounds the measured course label,
  // with straight outer edges and softly rounded corners, so no arc cuts through the glyphs.
  const segments=[
@@ -45,12 +60,13 @@ function measure(){
   [[l+(r-l)*.32,t-4],[r-(r-l)*.32,t-4],[r-rr,t]],
   [[r,t],[r,t],[r,t+rr]],
   [[r,cy-8],[r,cy-2],[r,cy]],
-  [[rail,cy+12],[rail,ay+20],[W*.91,ay+profile.offsetHeight*.20]],
-  [[W*.94,ay+profile.offsetHeight*.35],[W*.94,ay+profile.offsetHeight*.52],[W*.91,ay+profile.offsetHeight*.72]],
-  [[W*.89,wy-35],[W*.87,wy+wh*.02],[W*.76,wy+wh*.12]],
+  [[rail,cy+12],[rail,ay+20],[side(.91),ay+profile.offsetHeight*.20]],
+  [[side(.94),ay+profile.offsetHeight*.35],[side(.94),ay+profile.offsetHeight*.52],[side(.91),ay+profile.offsetHeight*.72]],
+  [[side(.89),wy-35],[side(.87),wy+wh*.02],[W*.76,wy+wh*.12]],
   [[W*.70,wy+wh*.40],[W*.13,wy+wh*.10],[W*.18,wy+wh*.52]],
   [[W*.22,wy+wh*.90],[W*.86,wy+wh*.54],[W*.80,wy+wh*.87]],
-  [[W*.92,rootY-150],[W*.53,rootY-120],junction]
+  // desktop sweeps across the page; on a phone it stays in the margin until it is below the invitation text
+  ...(W<760?[[[rail,rootY-430],[rail,rootY-160],[rail,rootY-45]],[[rail,rootY-20],[W*.72,rootY+2],junction]]:[[[W*.92,rootY-150],[W*.53,rootY-120],junction]])
  ];
  points=[];let prev=a;
  for(const [b,c,d] of segments){points.push(...curve(prev,b,c,d));prev=d;}
@@ -96,7 +112,7 @@ function stroke(pts,width,alpha,y,count=pts.length,taper=false){
   ctx.beginPath();ctx.lineWidth=width;let connected=false,visible=false;
   for(let i=1;i<n;i++){
    const a=pts[i-1],b=pts[i];
-   if(Math.max(a[1],b[1])<y-64||Math.min(a[1],b[1])>y+H+64){connected=false;continue;}
+   if(Math.max(a[1],b[1])<cullY-64||Math.min(a[1],b[1])>cullY+H+64){connected=false;continue;}
    if(!connected)ctx.moveTo(a[0],a[1]-y);
    ctx.lineTo(b[0],b[1]-y);connected=true;visible=true;
   }
@@ -143,7 +159,7 @@ function drawLeaves(shape,branch,index,progress,y){
  for(const leaf of branch.leaves){
   const reveal=motion?smooth((progress-leaf.t)/.16):1;if(reveal<=0)continue;
   const p=shape[leaf.index],q=shape[Math.min(leaf.index+2,shape.length-1)];
-  if(p[1]<y-140||p[1]>y+H+140)continue;
+  if(p[1]<cullY-140||p[1]>cullY+H+140)continue;
   const angle=Math.atan2(q[1]-p[1],q[0]-p[0])+leaf.side*(branch.level===0?.95:1.2);
   ctx.save();ctx.translate(p[0],p[1]-y);ctx.rotate(angle);
   stroke(leaf.outline,branch.level===0?1.35:1.05,.83,0,1+reveal*(leaf.outline.length-1));
@@ -151,7 +167,10 @@ function drawLeaves(shape,branch,index,progress,y){
   stroke(leaf.vein,.65,.38,0,1+veinReveal*(leaf.vein.length-1));ctx.restore();
  }
 }
-function render(now){queued=false;H=innerHeight;let y=Math.max(0,scrollY),intro=motion?clamp((now-start)/2300):1;if(intro!==lastIntro){lastIntro=intro;graph.style.strokeDasharray=length;graph.style.strokeDashoffset=length*(1-intro);$('.crossbar').style.opacity=clamp((intro-.7)*8);$('#graph-arrow').style.opacity=clamp((intro-.94)*18);}
+function render(now){queued=false;H=innerHeight;let y=Math.max(0,scrollY);cullY=y;
+// y = how far the page is scrolled. oy = where the canvas starts: 0 when the canvas scrolls with the page (mobile), y when it is pinned (desktop).
+const oy=canvas.style.position==='absolute'?0:y;
+let intro=motion?clamp((now-start)/2300):1;if(intro!==lastIntro){lastIntro=intro;graph.style.strokeDasharray=length;graph.style.strokeDashoffset=length*(1-intro);$('.crossbar').style.opacity=clamp((intro-.7)*8);$('#graph-arrow').style.opacity=clamp((intro-.94)*18);}
 if(y!==lastY){lastY=y;document.documentElement.style.setProperty('--progress',clamp(y/Math.max(1,D-viewportH))*100+'%');
 for(const [i,key] of ['a','b','c'].entries()){$('#profile-title').style.setProperty('--title-'+key,motion?smooth((y+viewportH*(.86-i*.085)-metrics.title)/(viewportH*.31)):1)}
 const studyProgress=motion?smooth((y+viewportH*.88-metrics.studies)/(viewportH*.55)):1;
@@ -173,15 +192,15 @@ let count=points.length;
 if(motion){count=1;while(count<points.length && points[count][1]<=front)count++;}
 count=Math.max(count,Math.floor(metrics.frameCount*frameIntro));
 if(intro>.95){
- stroke(points,W<760?3.3:4.2,.94,y,count);
+ stroke(points,W<760?3.3:4.2,.94,oy,count);
  const rootTravel=Math.max(1,Math.min(metrics.rootH,D-viewportH*.22-metrics.rootY));
  const growth=motion?clamp((front-metrics.rootY)/rootTravel):1;
  if(count>=points.length && y+H>metrics.rootY-140 && y<metrics.rootY+metrics.rootH+140){
   const shapes=livingBranches(now);
   branches.forEach((b,i)=>{
    const progress=clamp((growth-b.begin)/(b.finish-b.begin)),n=Math.floor(progress*(b.pts.length-1))+1;
-   stroke(shapes[i],b.width,b.level===0?.96:.82,y,n,true);
-   drawLeaves(shapes[i],b,i,progress,y);
+   stroke(shapes[i],b.width,b.level===0?.96:.82,oy,n,true);
+   drawLeaves(shapes[i],b,i,progress,oy);
   });
  }
 }
@@ -202,7 +221,11 @@ addEventListener('scroll',request,{passive:true});addEventListener('resize',()=>
  clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{
   if(W>760||document.documentElement.scrollHeight!==D)measure();
  },160);
-});addEventListener('load',measure);$('#portrait-slot img').addEventListener('load',measure);setMotion(motion);
+});addEventListener('load',measure);$('#portrait-slot img').addEventListener('load',measure);
+// Measure again whenever the page's own height changes (images, text wrapping, a section opening
+// or closing), so the loop around "Growth Marketing" always sits on the right text.
+if('ResizeObserver' in window){let lastBodyH=0,heightTimer;new ResizeObserver(()=>{const h=Math.round(document.body.getBoundingClientRect().height);if(h===lastBodyH)return;lastBodyH=h;clearTimeout(heightTimer);heightTimer=setTimeout(measure,120)}).observe(document.body)}
+setMotion(motion);
 })();
 
 document.addEventListener('DOMContentLoaded', function () {
