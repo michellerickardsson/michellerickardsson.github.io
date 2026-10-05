@@ -2260,3 +2260,8 @@ a.contact-destination:hover {
 .experience-link:hover {
   color: var(--accent);
 }
+.experience-story .experience-label {
+  margin: 0 0 14px;
+  font-weight: 400;
+  color: var(--muted);
+}
