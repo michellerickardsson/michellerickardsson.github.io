@@ -199,7 +199,7 @@ exakt<!DOCTYPE html>
 </head>
 <body>
 
-<div class="djurboom">
+<main class="djurboom">
 
   <h1>Hur många skaffade hund under pandemin, och vad hände med dem sen?</h1>
   <p class="byline">Michelle Rickardsson</p>
@@ -212,8 +212,8 @@ exakt<!DOCTYPE html>
   <p>2021 registrerades 78 052 nya hundar i Sverige, det högsta antalet Jordbruksverket någonsin mätt. Den siffran är väldokumenterad, den skrevs det om medan boomen pågick. Det som inte syns lika ofta är vad som hände efteråt: 2025 var antalet nya hundar nere på 56 801, det lägsta på åtta år, vad myndigheten själva kallar ett trendbrott.</p>
 
   <div class="chart-toggle">
-    <button class="toggle-btn active" data-show="dogCountLine">Antal</button>
-    <button class="toggle-btn" data-show="dogCountBar">Förändring per år</button>
+    <button type="button" class="toggle-btn active" data-show="dogCountLine">Antal</button>
+    <button type="button" class="toggle-btn" data-show="dogCountBar">Förändring per år</button>
   </div>
   <div class="chart-box" id="dogCountLine"><canvas id="chartDogCount"></canvas></div>
   <div class="chart-box" id="dogCountBar" style="display:none"><canvas id="chartDogChange"></canvas></div>
@@ -270,7 +270,7 @@ exakt<!DOCTYPE html>
     </dl>
   </div>
 
-</div>
+</main>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>

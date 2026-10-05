@@ -37,6 +37,7 @@
 
 .sg-hero__brand {
   font-family: var(--font-heading);
+  font-weight: 400;
   font-size: 11px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -225,8 +226,8 @@
   margin-bottom: 1.5rem;
 }
 
-.stargazing__tonight h3,
-.stargazing__ask h3 {
+.stargazing__tonight h2,
+.stargazing__ask h2 {
   font-family: var(--font-heading);
   font-size: 0.85rem;
   text-transform: uppercase;

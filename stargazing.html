@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A Stargazer's Guide — Growth portfolio</title>
+  <title>A Stargazer's Guide | Michelle Rickardsson</title>
   <meta name="description" content="For those who look up. Find the best spot and time to see stars, based on live weather, moon and aurora data." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,10 +27,10 @@
     </nav>
 
     <div class="sg-hero__content">
-      <div class="sg-hero__brand">A Stargazer's Guide</div>
+      <h1 class="sg-hero__brand">A Stargazer's Guide</h1>
       <div class="sg-hero__tagline">For those who look up.</div>
       <img src="stargazer-mark.png" alt="" class="sg-hero__mark" />
-      <button class="sg-egg" id="eggStar" aria-label="star">
+      <button type="button" class="sg-egg" id="eggStar" aria-label="star">
         <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 4.2 4.4.4-3.4 3 1 4.4L12 11.6 8.4 14 9.4 9.6 6 6.6l4.4-.4z"/></svg>
       </button>
       <span class="sg-egg__msg" id="eggMsg">You found me.</span>
@@ -45,8 +45,8 @@
     </div>
 
     <div class="stargazing__region-toggle">
-      <button class="region-btn" data-region="stockholm">Stockholm</button>
-      <button class="region-btn" data-region="dalarna">Dalarna (Avesta)</button>
+      <button type="button" class="region-btn" data-region="stockholm">Stockholm</button>
+      <button type="button" class="region-btn" data-region="dalarna">Dalarna (Avesta)</button>
     </div>
 
     <div class="stargazing__overview">
@@ -69,7 +69,7 @@
     </div>
 
     <div class="stargazing__tonight">
-      <h3>Tonight, in this region</h3>
+      <h2>Tonight, in this region</h2>
       <div class="tonight__grid">
 
         <div class="tonight__item">
@@ -139,7 +139,7 @@
     </div>
 
     <div class="stargazing__ask">
-      <h3>Ask the sky</h3>
+      <h2>Ask the sky</h2>
       <form id="askForm" class="ask__form">
         <input type="text" id="askInput" placeholder="When should I go stargazing?" />
         <button type="submit">Ask the sky &rarr;</button>
